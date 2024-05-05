@@ -13,7 +13,6 @@ def turn_credentials(line_name):
     else:
         raise Exception("API key as expired for this Turn line.")
 
-
 def obtain_auth_token(username, password):
     u_pass = HTTPBasicAuth(username, password)
     return requests.post('https://whatsapp.turn.io/v1/users/login', auth=u_pass)
@@ -72,14 +71,14 @@ def send_media_message(msisdn, media_type, media_id, caption=""):
 
     message_data["recipient_type"] = "individual"
     message_data["to"] =  msisdn
-
-    response = print(send_message(message_data))
+    response = send_message(message_data)
     print(response.text)
     return response
 
-def save_media(type, file_binary):
+def save_media(type, file_binary, line_name):
     auth_headers = {
-        'Authorization': f'Bearer {turn_credentials()}'
+        'Authorization': f'Bearer {turn_credentials(line_name)}'
     }
-
-    return requests.post('https://whatsapp.turn.io/v1/media', headers=auth_headers, data=file_binary)
+    response = requests.post('https://whatsapp.turn.io/v1/media', headers=auth_headers, data=file_binary)
+    print(response.text)
+    return response
