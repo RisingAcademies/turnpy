@@ -3,15 +3,27 @@ from datetime import datetime
 import requests
 import json
 
-def turn_credentials(line_name):
+
+def load_credentials(file_name, line_name):
+    with open(file_name, 'r') as file:
+        turn_config = json.load(file)
+
+    return turn_config[line_name]
+
+def eval_credentials(config_json):
     with open('turn_config.json', 'r') as file:
         turn_config = json.load(file)
 
-    token_expiry = datetime.strptime(turn_config[line_name]["expiry"], '%b %d, %Y %I:%M %p')
+    token_expiry = datetime.strptime(config_json["expiry"], '%b %d, %Y %I:%M %p')
     if token_expiry > datetime.now():
-        return turn_config[line_name]["api_key"]
+        return config_json["api_key"]
     else:
         raise Exception("API key as expired for this Turn line.")
+
+def turn_credentials(line_name):
+    config_json = load_credentials('turn_config.json', line_name)
+
+    return eval_credentials(config_json)
 
 def obtain_auth_token(username, password):
     u_pass = HTTPBasicAuth(username, password)
