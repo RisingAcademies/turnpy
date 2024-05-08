@@ -94,7 +94,8 @@ def send_media_message(msisdn, media_type, media_id, caption=""):
 ### https://whatsapp.turn.io/docs/api/media#supported-file-types
 def save_media(type, file_binary, line_name):
     auth_headers = {
-        'Authorization': f'Bearer {turn_credentials(line_name)}'
+        'Authorization': f'Bearer {turn_credentials(line_name)}',
+        'Content-Type': type
     }
     response = requests.post('https://whatsapp.turn.io/v1/media', headers=auth_headers, data=file_binary)
     print(response.text)

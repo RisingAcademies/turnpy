@@ -1,5 +1,6 @@
 import src.turn_integrator as turn_integrator
 import pytest
+import json
 
 def test_eval_credentials():
     config_json = {
@@ -16,3 +17,14 @@ def test_eval_credentials():
       "expiry": "Apr 2, 2030 1:16 PM"
     }
     assert turn_integrator.eval_credentials(config_json) == 'ABCD'
+
+def test_save_file():
+    with open('test/files/test_image.png', 'rb') as file:
+        # Read the entire file into a bytes object
+        binary_data = file.read()
+
+    response = turn_integrator.save_media('image/png', binary_data, 'Rori Staging')
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['media'][0]['id']
