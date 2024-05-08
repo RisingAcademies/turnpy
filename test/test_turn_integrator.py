@@ -1,7 +1,7 @@
 import src.turn_integrator as turn_integrator
 import pytest
 
-def test_eval_config():
+def test_eval_credentials():
     config_json = {
       "api_key": "ABCD",
       "expiry": "Apr 2, 2010 1:16 PM"

@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 import json
 
-
+### Load and evaluate the cedentials from the turn_config.json file
 def load_credentials(file_name, line_name):
     with open(file_name, 'r') as file:
         turn_config = json.load(file)
@@ -25,10 +25,13 @@ def turn_credentials(line_name):
 
     return eval_credentials(config_json)
 
+### Obtain a new auth token from Turn.io
+### TODO Not tested yet
 def obtain_auth_token(username, password):
     u_pass = HTTPBasicAuth(username, password)
     return requests.post('https://whatsapp.turn.io/v1/users/login', auth=u_pass)
 
+### Send the different kinds of messages
 def send_message(message_data, line_name):
     auth_headers = {
         'Authorization': f'Bearer {turn_credentials(line_name)}'
@@ -87,6 +90,8 @@ def send_media_message(msisdn, media_type, media_id, caption=""):
     print(response.text)
     return response
 
+### Save media to Turn for sending. See the supported file types on the Turn documentation here:
+### https://whatsapp.turn.io/docs/api/media#supported-file-types
 def save_media(type, file_binary, line_name):
     auth_headers = {
         'Authorization': f'Bearer {turn_credentials(line_name)}'
