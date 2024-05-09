@@ -53,7 +53,7 @@ def send_text_message(msisdn, message, line_name):
     print(response.text)
     return response
 
-def send_media_message(msisdn, media_type, media_id, caption=""):
+def send_media_message(msisdn, media_type, media_id, line_name, caption=""):
     message_data = {}
     if media_type == "audio":
         message_data["type"] = "audio"
@@ -86,7 +86,7 @@ def send_media_message(msisdn, media_type, media_id, caption=""):
 
     message_data["recipient_type"] = "individual"
     message_data["to"] =  msisdn
-    response = send_message(message_data)
+    response = send_message(message_data, line_name)
     print(response.text)
     return response
 
@@ -98,5 +98,15 @@ def save_media(type, file_binary, line_name):
         'Content-Type': type
     }
     response = requests.post('https://whatsapp.turn.io/v1/media', headers=auth_headers, data=file_binary)
+    print(response.text)
+    return response
+
+### Determine whether a certin msisdn is claimed by a Turn process line a Journey. See:
+### https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
+def determine_claim(msisdn, line_name):
+    auth_headers = {
+        'Authorization': f'Bearer {turn_credentials(line_name)}',
+    }
+    response = requests.get(f'https://whatsapp.turn.io/v1/contacts/{msisdn}/claim', headers=auth_headers)
     print(response.text)
     return response

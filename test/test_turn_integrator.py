@@ -18,6 +18,21 @@ def test_eval_credentials():
     }
     assert turn_integrator.eval_credentials(config_json) == 'ABCD'
 
+def test_send_text_message():
+    response = turn_integrator.send_text_message('+27833365615', 'Test!', 'Rori Staging')
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['messages'][0]['id']
+
+def test_determine_claim():
+    response = turn_integrator.determine_claim('+27833365615', 'Rori Staging')
+    # response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    print(response)
+    # assert response_text['claimed_at']
+
 def test_save_file():
     with open('test/files/test_image.png', 'rb') as file:
         # Read the entire file into a bytes object
