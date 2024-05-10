@@ -4,7 +4,9 @@ A package to help you connect to the [Turn.io](https://whatsapp.turn.io/docs/cat
 
 ## Setup
 
-Make a copy of the `turn_config.json.example` file and rename to `turn_config.json`. Then for each of your turn lines, fill in the key details and the expiry date for that line. The date should be saved in the `turn_config.json` file exactly as shown in Turn, so in the format "Apr 2, 2030 1:16 PM".
+Make a copy of the `turn_config.json.example` file and rename to `turn_config.json`. Then for each of your turn lines, fill in the API key details and the expiry date for that line under the `lines` attribute. The date should be saved in the `turn_config.json` file exactly as shown in Turn, so in the format "Apr 2, 2030 1:16 PM".
+
+NOTE: If you run the tests for this Repo, you will need to specify the name of a line and a receiving number to test with details in `turn_config.json`.
 
 ## Use
 

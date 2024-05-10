@@ -8,7 +8,7 @@ def load_credentials(file_name, line_name):
     with open(file_name, 'r') as file:
         turn_config = json.load(file)
 
-    return turn_config[line_name]
+    return turn_config['lines'][line_name]
 
 def eval_credentials(config_json):
     with open('turn_config.json', 'r') as file:
@@ -106,6 +106,7 @@ def save_media(type, file_binary, line_name):
 def determine_claim(msisdn, line_name):
     auth_headers = {
         'Authorization': f'Bearer {turn_credentials(line_name)}',
+        'Accept': 'application/vnd.v1+json'
     }
     response = requests.get(f'https://whatsapp.turn.io/v1/contacts/{msisdn}/claim', headers=auth_headers)
     print(response.text)
