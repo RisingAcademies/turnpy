@@ -26,11 +26,11 @@ def test_send_text_message():
     assert response_text['messages'][0]['id']
 
 def test_determine_claim():
-    response = turn_integrator.determine_claim('+27833365615', 'Rori Staging')
+    response = turn_integrator.determine_claim('27833365615', 'Rori Staging')
     # response_text = json.loads(response.text)
     # TODO Needs to work but unclear why API returns 403
     # assert response.status_code == 200
-    assert response.status_code == 403
+    assert response.status_code == 200
     print(response)
     # assert response_text['claimed_at']
 
