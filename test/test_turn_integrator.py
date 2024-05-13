@@ -24,14 +24,16 @@ def test_eval_credentials():
     }
     assert turn_integrator.eval_credentials(config_json) == 'ABCD'
 
+@pytest.mark.vcr()
 def test_send_text_message():
     text_config = load_test_config()
-    response = turn_integrator.send_text_message(text_config['test_number'], 'Test!', text_config['test_line'])
+    response = turn_integrator.send_text_message(f'+{text_config["test_number"]}', 'Test!', text_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
     assert response_text['messages'][0]['id']
 
+@pytest.mark.vcr()
 def test_determine_claim_not_found():
     text_config = load_test_config()
     response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
@@ -40,6 +42,7 @@ def test_determine_claim_not_found():
     assert response.status_code == 404
     assert 'conversation claim' in response_text['errors'][0]
 
+@pytest.mark.vcr()
 def test_save_file():
     text_config = load_test_config()
     with open('test/files/test_image.png', 'rb') as file:

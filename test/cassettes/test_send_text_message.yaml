@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: '{"preview_url": false, "recipient_type": "individual", "to": "+27833365615",
+      "type": "text", "text": {"body": "Test!"}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUdXJuIiwiZXhwIjoxNzc4MDAxNjYwLCJpYXQiOjE3MTQ5MzMyNzEsImlzcyI6IlR1cm4iLCJqdGkiOiIzYWNjY2VmYS00ZWFkLTQ0MzctYWNhMi04N2IyOWU3Yjk0OTYiLCJuYmYiOjE3MTQ5MzMyNzAsInN1YiI6Im51bWJlcjozOTc3IiwidHlwIjoiYWNjZXNzIn0.I-qhamvyd3FH_2kJlioHI_jmg4NVROAujNQCYJIVWct1FXWXyVMJoNsyTcLJGhCpQeMaNJpmRVwkgMu7KDFXZg
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '119'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.31.0
+    method: POST
+    uri: https://whatsapp.turn.io/v1/messages
+  response:
+    body:
+      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBJGQ0JDQjJFQzU5NTY0N0E3MjYA"}],"meta":{"version":"4.599.1","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Via:
+      - 1.1 google
+      cache-control:
+      - max-age=0, private, must-revalidate
+      content-length:
+      - '182'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 13 May 2024 07:36:21 GMT
+      server:
+      - Cowboy
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - accept-encoding
+      x-ratelimit-bucket:
+      - text
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '59'
+      x-ratelimit-reset:
+      - '1715585819.228'
+      x-request-id:
+      - F878LZQu0vL5GHsDxFeB
+    status:
+      code: 200
+      message: OK
+version: 1
