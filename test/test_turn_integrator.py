@@ -34,16 +34,7 @@ def test_send_text_message():
     assert response_text['messages'][0]['id']
 
 @pytest.mark.vcr()
-def test_determine_claim_not_found():
-    text_config = load_test_config()
-    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
-    response_text = json.loads(response.text)
-
-    assert response.status_code == 404
-    assert 'conversation claim' in response_text['errors'][0]
-
-@pytest.mark.vcr()
-def test_save_file():
+def test_save_media():
     text_config = load_test_config()
     with open('test/files/test_image.png', 'rb') as file:
         # Read the entire file into a bytes object
@@ -54,3 +45,38 @@ def test_save_file():
 
     assert response.status_code == 200
     assert response_text['media'][0]['id']
+
+@pytest.mark.vcr()
+def test_determine_claim_not_found():
+    text_config = load_test_config()
+    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 404
+    assert 'conversation claim' in response_text['errors'][0]
+
+@pytest.mark.vcr()
+def test_determine_claim_found():
+    text_config = load_test_config()
+    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['uuid']
+
+@pytest.mark.vcr()
+def test_destroy_claim():
+    text_config = load_test_config()
+    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['uuid']
+
+    claim_uuid = response_text['uuid']
+
+    response = turn_integrator.destroy_claim(text_config['test_number'], text_config['test_line'], claim_uuid)
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['claim_uuid']

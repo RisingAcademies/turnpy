@@ -31,7 +31,8 @@ def obtain_auth_token(username, password):
     u_pass = HTTPBasicAuth(username, password)
     return requests.post('https://whatsapp.turn.io/v1/users/login', auth=u_pass)
 
-### Send the different kinds of messages
+### Send the different kinds of messages. See documentation here:
+### https://whatsapp.turn.io/docs/api/messages
 def send_message(message_data, line_name):
     auth_headers = {
         'Authorization': f'Bearer {turn_credentials(line_name)}'
@@ -101,7 +102,8 @@ def save_media(type, file_binary, line_name):
     print(response.text)
     return response
 
-### Determine whether a certin msisdn is claimed by a Turn process line a Journey. See:
+### Manage claimed numbers, like determining a claim by a Turn process line a Journey,
+### or deleting one. See:
 ### https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 def determine_claim(msisdn, line_name):
     auth_headers = {
@@ -109,5 +111,16 @@ def determine_claim(msisdn, line_name):
         'Accept': 'application/vnd.v1+json'
     }
     response = requests.get(f'https://whatsapp.turn.io/v1/contacts/{msisdn}/claim', headers=auth_headers)
+    print(response.text)
+    return response
+
+def destroy_claim(msisdn, line_name, claim_uuid):
+    claim_data = {"claim_uuid": claim_uuid}
+
+    auth_headers = {
+        'Authorization': f'Bearer {turn_credentials(line_name)}',
+        'Accept': 'application/vnd.v1+json'
+    }
+    response = requests.delete(f'https://whatsapp.turn.io/v1/contacts/{msisdn}/claim', headers=auth_headers, json=claim_data)
     print(response.text)
     return response
