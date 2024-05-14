@@ -19,6 +19,8 @@ This package currently supports sending text and media messages as well as obtai
 * Managing claims on a number
 * More to come soon!
 
+Details are in the comments in the code itself.
+
 ## Involvement
 
 Please assist in improving this project! Please open issues, send PRs and suggestions welcome.
