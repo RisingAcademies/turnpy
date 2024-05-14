@@ -16,4 +16,9 @@ This package currently supports sending text and media messages as well as obtai
 * Sending a text message
 * Saving a media file
 * Sending a media message
-* Determining if another process has a claim on a number (if a number is claimed you will not be able to sent text messages to it from the API).
+* Managing claims on a number
+* More to come soon!
+
+## Involvement
+
+Please assist in improving this project! Please open issues, send PRs and suggestions welcome.
