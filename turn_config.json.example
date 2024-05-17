@@ -10,5 +10,6 @@
       }
     },
   "test_line": "name_of_a_line_for_the_test_suite",
-  "test_number": "name_of_a_number_for_the_test_suite"
+  "test_number": "name_of_a_number_for_the_test_suite",
+  "test_journey": "name_of_a_stack_on_your_test_line"
 }

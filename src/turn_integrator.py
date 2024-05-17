@@ -124,3 +124,17 @@ def destroy_claim(msisdn, line_name, claim_uuid):
     response = requests.delete(f'https://whatsapp.turn.io/v1/contacts/{msisdn}/claim', headers=auth_headers, json=claim_data)
     print(response.text)
     return response
+
+### Journey management
+### https://whatsapp.turn.io/docs/api/stacks
+
+def start_journey(msisdn, line_name, stack_uuid):
+    journey_data = {"wa_id": msisdn}
+
+    auth_headers = {
+        'Authorization': f'Bearer {turn_credentials(line_name)}',
+        'Accept': 'application/vnd.v1+json'
+    }
+    response = requests.delete(f'https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start', headers=auth_headers, json=journey_data)
+    print(response.text)
+    return response

@@ -6,7 +6,7 @@ def load_test_config():
     with open('turn_config.json', 'r') as file:
         turn_config = json.load(file)
 
-    return { 'test_line': turn_config['test_line'], 'test_number': turn_config['test_number'] }
+    return { 'test_line': turn_config['test_line'], 'test_number': turn_config['test_number'], 'test_journey': turn_config['test_journey'] }
 
 def test_eval_credentials():
     config_json = {
@@ -26,8 +26,8 @@ def test_eval_credentials():
 
 @pytest.mark.vcr()
 def test_send_text_message():
-    text_config = load_test_config()
-    response = turn_integrator.send_text_message(f'+{text_config["test_number"]}', 'Test!', text_config['test_line'])
+    test_config = load_test_config()
+    response = turn_integrator.send_text_message(f'+{test_config["test_number"]}', 'Test!', test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
@@ -35,12 +35,12 @@ def test_send_text_message():
 
 @pytest.mark.vcr()
 def test_save_media():
-    text_config = load_test_config()
+    test_config = load_test_config()
     with open('test/files/test_image.png', 'rb') as file:
         # Read the entire file into a bytes object
         binary_data = file.read()
 
-    response = turn_integrator.save_media('image/png', binary_data, text_config['test_line'])
+    response = turn_integrator.save_media('image/png', binary_data, test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
@@ -48,8 +48,8 @@ def test_save_media():
 
 @pytest.mark.vcr()
 def test_determine_claim_not_found():
-    text_config = load_test_config()
-    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    test_config = load_test_config()
+    response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 404
@@ -57,8 +57,8 @@ def test_determine_claim_not_found():
 
 @pytest.mark.vcr()
 def test_determine_claim_found():
-    text_config = load_test_config()
-    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    test_config = load_test_config()
+    response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
@@ -66,8 +66,8 @@ def test_determine_claim_found():
 
 @pytest.mark.vcr()
 def test_destroy_claim():
-    text_config = load_test_config()
-    response = turn_integrator.determine_claim(text_config['test_number'], text_config['test_line'])
+    test_config = load_test_config()
+    response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
@@ -75,8 +75,17 @@ def test_destroy_claim():
 
     claim_uuid = response_text['uuid']
 
-    response = turn_integrator.destroy_claim(text_config['test_number'], text_config['test_line'], claim_uuid)
+    response = turn_integrator.destroy_claim(test_config['test_number'], test_config['test_line'], claim_uuid)
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
     assert response_text['claim_uuid']
+
+@pytest.mark.vcr()
+def test_start_journey():
+    test_config = load_test_config()
+    response = turn_integrator.start_journey(f'+{test_config["test_number"]}', test_config['test_line'], test_config['test_journey'])
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 201
+    assert response_text['success']
