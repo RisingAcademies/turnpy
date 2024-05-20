@@ -16,11 +16,11 @@ interactions:
       - application/json
       User-Agent:
       - python-requests/2.31.0
-    method: DELETE
+    method: POST
     uri: https://whatsapp.turn.io/v1/stacks/b00e1df2-409f-4594-9818-3fabab93e079/start
   response:
     body:
-      string: '{"errors":{"detail":"Not Found"}}'
+      string: '{"success":true}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -29,20 +29,28 @@ interactions:
       cache-control:
       - max-age=0, private, must-revalidate
       content-length:
-      - '33'
+      - '16'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 16 May 2024 11:32:18 GMT
+      - Mon, 20 May 2024 12:40:05 GMT
       server:
       - Cowboy
       strict-transport-security:
       - max-age=31536000
       vary:
       - accept-encoding
+      x-ratelimit-bucket:
+      - general
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '59'
+      x-ratelimit-reset:
+      - '1716208860.0'
       x-request-id:
-      - F8_0y8D_oy6ouDQB1wEj
+      - F9Ey0PGwule1g3ACsUMj
     status:
-      code: 404
-      message: Not Found
+      code: 201
+      message: Created
 version: 1

@@ -27,7 +27,7 @@ def test_eval_credentials():
 @pytest.mark.vcr()
 def test_send_text_message():
     test_config = load_test_config()
-    response = turn_integrator.send_text_message(f'+{test_config["test_number"]}', 'Test!', test_config['test_line'])
+    response = turn_integrator.send_text_message(test_config["test_number"], 'Test!', test_config['test_line'])
     response_text = json.loads(response.text)
 
     assert response.status_code == 200

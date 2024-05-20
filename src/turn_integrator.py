@@ -135,6 +135,6 @@ def start_journey(msisdn, line_name, stack_uuid):
         'Authorization': f'Bearer {turn_credentials(line_name)}',
         'Accept': 'application/vnd.v1+json'
     }
-    response = requests.delete(f'https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start', headers=auth_headers, json=journey_data)
+    response = requests.post(f'https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start', headers=auth_headers, json=journey_data)
     print(response.text)
     return response
