@@ -55,7 +55,10 @@ def send_text_message(msisdn, message, line_name):
     return response
 
 def send_media_message(msisdn, media_type, media_id, line_name, caption=""):
-    message_data = {}
+    message_data = {
+        "to": msisdn,
+        "recipient_type": "individual",
+    }
     if media_type == "audio":
         message_data["type"] = "audio"
         message_data["audio"] = {"id": media_id}
@@ -85,8 +88,23 @@ def send_media_message(msisdn, media_type, media_id, line_name, caption=""):
             "caption": caption
         }
 
-    message_data["recipient_type"] = "individual"
-    message_data["to"] =  msisdn
+    response = send_message(message_data, line_name)
+    print(response.text)
+    return response
+
+
+### Send an interactive message with a dropdown or buttons. Details here:
+### https://whatsapp.turn.io/docs/api/messages#interactive-messages
+
+def send_interactive_message(msisdn, interactive_type, line_name):
+    message_data = {
+        "to": msisdn,
+        "type": "interactive",
+        "interactive": {
+            "type": interactive_type
+        }
+    }
+
     response = send_message(message_data, line_name)
     print(response.text)
     return response
@@ -125,7 +143,7 @@ def destroy_claim(msisdn, line_name, claim_uuid):
     print(response.text)
     return response
 
-### Journey management
+### Start a journey for a specific user. Details here:
 ### https://whatsapp.turn.io/docs/api/stacks
 
 def start_journey(msisdn, line_name, stack_uuid):
