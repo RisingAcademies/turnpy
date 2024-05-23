@@ -34,6 +34,32 @@ def test_send_text_message():
     assert response_text['messages'][0]['id']
 
 @pytest.mark.vcr()
+def test_send_interactive_message():
+    test_config = load_test_config()
+    response = turn_integrator.send_interactive_message(test_config["test_number"], 'button', test_config['test_line'],
+        {
+            "header_text": "Testheader",
+            "footer_text": "Testfooter",
+            "body_text": "Testbody",
+            "buttons": [
+                {
+                    "callback_id": 1234,
+                    "text": "Testbutton 1"
+                },
+                {
+                    "callback_id": 1235,
+                    "text": "Testbutton 2"
+                },
+            ]
+
+        }
+    )
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['messages'][0]['id']
+
+@pytest.mark.vcr()
 def test_save_media():
     test_config = load_test_config()
     with open('test/files/test_image.png', 'rb') as file:

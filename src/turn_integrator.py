@@ -93,18 +93,60 @@ def send_media_message(msisdn, media_type, media_id, line_name, caption=""):
     return response
 
 
-### Send an interactive message with a dropdown or buttons. Details here:
+### Send an interactive message with a dropdown or buttons.
+### The sections argument is a dictionary with a few attrbutes:
+### 'header_text' - text, optional
+### 'header_image' - id of a saved image, optional
+### 'body_text' - text, required
+### 'footer_text' - text, optional
+### 'buttons' - array, required array of buttons with text and callback_id, used if the interactive_type
+### is a button.
+### Further details about the API call here:
 ### https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
-def send_interactive_message(msisdn, interactive_type, line_name):
+def send_interactive_message(msisdn, interactive_type, line_name, sections):
     message_data = {
         "to": msisdn,
         "type": "interactive",
         "interactive": {
-            "type": interactive_type
-        }
+            "type": interactive_type,
+            "body": {
+                "text": sections['body_text']
+            },
+            'action': {}
+        },
     }
 
+    if sections['header_text']:
+        message_data['interactive']['header'] = {
+            "type": "text",
+            "text": sections['header_text']
+        }
+    elif sections['header_image']:
+        message_data['interactive']['header'] = {
+            "type": "image",
+            "id": sections['header_image']
+        }
+
+    if sections['footer_text']:
+        message_data['interactive']['footer'] = {
+            "text": sections['footer_text']
+        }
+
+    if interactive_type == 'button':
+        message_data['interactive']['action']['buttons'] = []
+        for button in sections['buttons']:
+            message_data['interactive']['action']['buttons'].append(
+                {
+                    "type": "reply",
+                    "reply": {
+                        "id": button['callback_id'],
+                        "title": button['text']
+                    }
+                }
+            )
+
+    print(message_data)
     response = send_message(message_data, line_name)
     print(response.text)
     return response
