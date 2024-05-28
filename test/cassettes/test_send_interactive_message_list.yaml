@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '{"to": "27833365615", "type": "interactive", "interactive": {"type": "button",
-      "body": {"text": "Testbody"}, "action": {"buttons": [{"type": "reply", "reply":
-      {"id": 1234, "title": "Testbutton 1"}}, {"type": "reply", "reply": {"id": 1235,
-      "title": "Testbutton 2"}}]}, "header": {"type": "text", "text": "Testheader"},
-      "footer": {"text": "Testfooter"}}}'
+    body: '{"to": "27833365615", "type": "interactive", "interactive": {"type": "list",
+      "body": {"text": "Testbody"}, "action": {"button": "Click here", "sections":
+      [{"title": "Interesting list", "rows": [{"id": "1234", "title": "Test item 1"},
+      {"id": "1235", "title": "Test item 2"}]}]}, "header": {"type": "text", "text":
+      "Testheader"}, "footer": {"text": "Testfooter"}}}'
     headers:
       Accept:
       - '*/*'
@@ -15,7 +15,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '352'
+      - '362'
       Content-Type:
       - application/json
       User-Agent:
@@ -24,7 +24,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/messages
   response:
     body:
-      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBIzMzQ5OEIyRkZFQzFENTA2QTcA"}],"meta":{"version":"4.605.1","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
+      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBI3NzRDM0EwMEE4NjBGNTMyQkQA"}],"meta":{"version":"4.607.0","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -37,7 +37,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Thu, 23 May 2024 11:16:51 GMT
+      - Tue, 28 May 2024 06:52:26 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -49,11 +49,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '59'
+      - '58'
       x-ratelimit-reset:
-      - '1716463019.627'
+      - '1716879179.025'
       x-request-id:
-      - F9IaA4NNZD_yrogAz5bD
+      - F9OUfKH1wgqmEtADHJoD
     status:
       code: 200
       message: OK

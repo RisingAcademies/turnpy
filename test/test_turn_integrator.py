@@ -34,7 +34,7 @@ def test_send_text_message():
     assert response_text['messages'][0]['id']
 
 @pytest.mark.vcr()
-def test_send_interactive_message():
+def test_send_interactive_message_button():
     test_config = load_test_config()
     response = turn_integrator.send_interactive_message(test_config["test_number"], 'button', test_config['test_line'],
         {
@@ -43,12 +43,40 @@ def test_send_interactive_message():
             "body_text": "Testbody",
             "buttons": [
                 {
-                    "callback_id": 1234,
+                    "callback_id": "1234",
                     "text": "Testbutton 1"
                 },
                 {
-                    "callback_id": 1235,
+                    "callback_id": "1235",
                     "text": "Testbutton 2"
+                },
+            ]
+
+        }
+    )
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['messages'][0]['id']
+
+@pytest.mark.vcr()
+def test_send_interactive_message_list():
+    test_config = load_test_config()
+    response = turn_integrator.send_interactive_message(test_config["test_number"], 'list', test_config['test_line'],
+        {
+            "header_text": "Testheader",
+            "footer_text": "Testfooter",
+            "body_text": "Testbody",
+            "list_button": "Click here",
+            "list_title": "Interesting list",
+            "list_items": [
+                {
+                    "callback_id": "1234",
+                    "text": "Test item 1"
+                },
+                {
+                    "callback_id": "1235",
+                    "text": "Test item 2"
                 },
             ]
 

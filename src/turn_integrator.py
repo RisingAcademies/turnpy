@@ -100,7 +100,10 @@ def send_media_message(msisdn, media_type, media_id, line_name, caption=""):
 ### 'body_text' - text, required
 ### 'footer_text' - text, optional
 ### 'buttons' - array, required array of buttons with text and callback_id, used if the interactive_type
-### is a button.
+### is a 'button'.
+### 'list_button' - text, required text of the list button for interactive_type = 'list'
+### 'list_title' - text, required title text for the list for interactive_type = 'list'
+### 'list_items' - array, required array of items with text and callback_id for interactive_type = 'list'
 ### Further details about the API call here:
 ### https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
@@ -145,6 +148,22 @@ def send_interactive_message(msisdn, interactive_type, line_name, sections):
                     }
                 }
             )
+
+    if interactive_type == 'list':
+        message_data['interactive']['action']['button'] = sections['list_button']
+        message_data['interactive']['action']['sections'] = []
+        message_data['interactive']['action']['sections'].append({})
+        message_data['interactive']['action']['sections'][0]['title'] = sections['list_title']
+        message_data['interactive']['action']['sections'][0]['rows'] = []
+        for list_item in sections['list_items']:
+            message_data['interactive']['action']['sections'][0]['rows'].append(
+                {
+                    "id": list_item['callback_id'],
+                    "title": list_item['text']
+                }
+            )
+
+
 
     print(message_data)
     response = send_message(message_data, line_name)
