@@ -2,6 +2,7 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import requests
 import json
+
 ## SETUP
 ## Load and evaluate the cedentials from the turn_config.json file
 def load_credentials(file_name: str, line_name: str) -> str:
