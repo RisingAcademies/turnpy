@@ -10,7 +10,7 @@ def load_test_config():
 
 def test_eval_credentials():
     config_json = {
-      "api_key": "ABCD",
+      "token": "ABCD",
       "expiry": "Apr 2, 2010 1:16 PM"
     }
     with pytest.raises(Exception) as excinfo:
@@ -19,15 +19,35 @@ def test_eval_credentials():
         assert "API key as expired for this Turn line." in str(excinfo.value)
 
     config_json = {
-      "api_key": "ABCD",
+      "token": "ABCD",
       "expiry": "Apr 2, 2030 1:16 PM"
     }
     assert turn_integrator.eval_credentials(config_json) == 'ABCD'
 
 @pytest.mark.vcr()
+def test_obtain_contact_profile():
+    test_config = load_test_config()
+    response = turn_integrator.obtain_contact_profile(test_config["test_number"], test_config['test_line'])
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text['schema']
+    assert response_text['fields']
+
+@pytest.mark.vcr()
+def test_update_contact_profile():
+    test_config = load_test_config()
+    profile_data = { 'chat_per_week': '1' }
+    response = turn_integrator.update_contact_profile(test_config["test_number"], test_config['test_line'], profile_data)
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 201
+    assert response_text['fields']['chat_per_week'] == '1'
+
+@pytest.mark.vcr()
 def test_send_text_message():
     test_config = load_test_config()
-    response = turn_integrator.send_text_message(test_config["test_number"], 'Test!', test_config['test_line'])
+    response = turn_integrator.send_text_message(test_config["test_number"], test_config['test_line'], 'Test!')
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
@@ -36,7 +56,7 @@ def test_send_text_message():
 @pytest.mark.vcr()
 def test_send_interactive_message_button():
     test_config = load_test_config()
-    response = turn_integrator.send_interactive_message(test_config["test_number"], 'button', test_config['test_line'],
+    response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'button',
         {
             "header_text": "Testheader",
             "footer_text": "Testfooter",
@@ -62,7 +82,7 @@ def test_send_interactive_message_button():
 @pytest.mark.vcr()
 def test_send_interactive_message_list():
     test_config = load_test_config()
-    response = turn_integrator.send_interactive_message(test_config["test_number"], 'list', test_config['test_line'],
+    response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'list',
         {
             "header_text": "Testheader",
             "footer_text": "Testfooter",
@@ -94,7 +114,7 @@ def test_save_media():
         # Read the entire file into a bytes object
         binary_data = file.read()
 
-    response = turn_integrator.save_media('image/png', binary_data, test_config['test_line'])
+    response = turn_integrator.save_media(test_config['test_line'], 'image/png', binary_data)
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
