@@ -1,0 +1,66 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/vnd.v1+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUdXJuIiwiZXhwIjoxNzc4MDAxNjYwLCJpYXQiOjE3MTQ5MzMyNzEsImlzcyI6IlR1cm4iLCJqdGkiOiIzYWNjY2VmYS00ZWFkLTQ0MzctYWNhMi04N2IyOWU3Yjk0OTYiLCJuYmYiOjE3MTQ5MzMyNzAsInN1YiI6Im51bWJlcjozOTc3IiwidHlwIjoiYWNjZXNzIn0.I-qhamvyd3FH_2kJlioHI_jmg4NVROAujNQCYJIVWct1FXWXyVMJoNsyTcLJGhCpQeMaNJpmRVwkgMu7KDFXZg
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://whatsapp.turn.io/v1/contacts/27833365615/profile
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA31UTW+cMBD9Lz4vEQYDgVulSr1HUaX2Yhl72HXX2NQfm66i/PcOsCQ0UXrD4/l4
+        894zz2TQYFQg3TPRgffGyTMo0g3CBDiQYxJeaWG5dDaAjaQjPyCQAwlnbQzXmEloI3taD02WN7XM
+        WN7nWSuqIRNQDUo0Q9/0A1YcvVDADVzAkM4mYw7EiwjcO6+3gEze4xT+O0GI2lnsXs3D5Mk58z5p
+        1NI7bBjCkkjeboSM+qLjFaM5hqObtMQN0oK/eUNvFfyZF9iVLrkY+wZuhOiveLVAfi2nc8dBWx1O
+        oPgo4mmd7aaIZ225iBvQE5hJQTjz0SlYs8Rx/mAzBiMssjuf12xkXqw7r+cnMBIx8BCFPN9Qrpts
+        uBlGZgD/kjqkmDzwX65/T9iyNdZ9sUezE3HbrMDI00nEIKaJT94N2gC3YpwRP3z9vr9ddC+a+7Is
+        66qmi0ZgQMY3SuiOE9JFn9BNzvZu9pM94tBxMhDh1VDWJCwNEfx1RQT+Jt8G/98ttQ+R63HyqP+O
+        tSNYQFvpC3wcgR6Oc6NkxUVoI3pzU8XgXD5iI5SDh8VBCyF5wbK8zvLykRYdrbuivaOsYKz4uRUF
+        APsumT3SsqvajrE5q9c+npS4vqq8H+VBAiJV/+0Qkl9FuDVY3Li3gERV+ASePwGctzR8tEfr8BHJ
+        jzys3H0KoszyIqO4M+3yuqPNXV7ULaUzlqtL3Ojz9mhvP4nNIw/k5UBSWswBZUmVbMuM9q3ImOpZ
+        JlR1n5W0UlS21VCwcn3ZMArM72UtaNHU2aDw18FY22Z9notM0IYWtO9pMcwuS5MS8XPCKtSnavL7
+        GevmhM0bL38BsD3uvusEAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 google
+      cache-control:
+      - max-age=0, private, must-revalidate
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 17 Jun 2024 06:40:27 GMT
+      server:
+      - Cowboy
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - accept-encoding
+      x-ratelimit-bucket:
+      - general
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '59'
+      x-ratelimit-reset:
+      - '1718606459.374'
+      x-request-id:
+      - F9m3cLsyvea3eiMHBRTB
+    status:
+      code: 200
+      message: OK
+version: 1
