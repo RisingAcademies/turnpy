@@ -1,9 +1,13 @@
 interactions:
 - request:
-    body: '{"wa_id": "+27833365615"}'
+    body: '{"to": "27833365615", "type": "interactive", "interactive": {"type": "button",
+      "body": {"text": "Testbody"}, "action": {"buttons": [{"type": "reply", "reply":
+      {"id": "1234", "title": "Testbutton 1"}}, {"type": "reply", "reply": {"id":
+      "1235", "title": "Testbutton 2"}}]}, "header": {"type": "text", "text": "Testheader"},
+      "footer": {"text": "Testfooter"}}}'
     headers:
       Accept:
-      - application/vnd.v1+json
+      - '*/*'
       Accept-Encoding:
       - gzip, deflate
       Authorization:
@@ -11,16 +15,16 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '25'
+      - '356'
       Content-Type:
       - application/json
       User-Agent:
       - python-requests/2.31.0
     method: POST
-    uri: https://whatsapp.turn.io/v1/stacks/b00e1df2-409f-4594-9818-3fabab93e079/start
+    uri: https://whatsapp.turn.io/v1/messages
   response:
     body:
-      string: '{"success":true}'
+      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBJGMzgyQzhEOUY4Q0EzQjZCOEUA"}],"meta":{"version":"4.607.0","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -29,11 +33,11 @@ interactions:
       cache-control:
       - max-age=0, private, must-revalidate
       content-length:
-      - '16'
+      - '182'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 20 May 2024 12:40:05 GMT
+      - Tue, 28 May 2024 06:52:25 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -47,10 +51,10 @@ interactions:
       x-ratelimit-remaining:
       - '59'
       x-ratelimit-reset:
-      - '1716208860.0'
+      - '1716879179.215'
       x-request-id:
-      - F9Ey0PGwule1g3ACsUMj
+      - F9OUfFsRhAjI9NEDa1Ji
     status:
-      code: 201
-      message: Created
+      code: 200
+      message: OK
 version: 1

@@ -1,3 +1,4 @@
 .env
 venv/
 turn_config.json
+.pytest_cache/

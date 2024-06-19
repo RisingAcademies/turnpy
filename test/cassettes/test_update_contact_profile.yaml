@@ -1,0 +1,70 @@
+interactions:
+- request:
+    body: '{"chat_per_week": "1"}'
+    headers:
+      Accept:
+      - application/vnd.v1+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUdXJuIiwiZXhwIjoxNzc4MDAxNjYwLCJpYXQiOjE3MTQ5MzMyNzEsImlzcyI6IlR1cm4iLCJqdGkiOiIzYWNjY2VmYS00ZWFkLTQ0MzctYWNhMi04N2IyOWU3Yjk0OTYiLCJuYmYiOjE3MTQ5MzMyNzAsInN1YiI6Im51bWJlcjozOTc3IiwidHlwIjoiYWNjZXNzIn0.I-qhamvyd3FH_2kJlioHI_jmg4NVROAujNQCYJIVWct1FXWXyVMJoNsyTcLJGhCpQeMaNJpmRVwkgMu7KDFXZg
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '22'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.31.0
+    method: PATCH
+    uri: https://whatsapp.turn.io/v1/contacts/27833365615/profile
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA31UTY+bMBD9Lz6HCIOBhVulSr2vVpXai2XsIXFjbOqPbKPV/vcOEHazWbU3PJ6P
+        N+8980IGDUYF0r0QHXhvnDyBIt0gTIAdOSThlRaWS2cD2Eg68gMC2ZFw0sZwjZmENrKn9dBkeVPL
+        jOV9nrWiGjIB1aBEM/RNP2DFwQsF3MAZDOlsMmZHvIjAvfN6C8jkPU7hvxOEqJ3F7tU8TB6dM/dJ
+        o5beYcMQlkTyfiNk1GcdLxjNMRzdpCVukBb8zTt6q+DPvMBN6ZKLsW/gRoj+glcL5LdyOncctNXh
+        CIqPIh7X2W6KeNaWi7gBPYKZFIQTH52CNUsc5g82YzDCIrvzec1G5sW683p+BiMRAw9RyNMV5brJ
+        hpthZAbwkdQhxeSB/3L9PWHL1lj3xR7MjYjbZgVGno8iBjFNfPJu0Aa4FeOM+PHr99vbRfeieSjL
+        sq5qumgEBmR8p4TecEK66BO6ydnezX6yBxw6TgYivBnKmoSlIYK/rIjAX+Xb4H/cUvsQuR4nj/rf
+        sHYAC2grfYbPI9DDcW6UrDgLbURvrqoYnMtHbIRy8LA4aCEkL1iW11lePtGio3VXtHvKCsaKn1tR
+        ALB3yeyJll3VdozNWb328ajE5U3l21EeJCBS9d8OIflVhGuDxY23FpCoCp/A82eAzSj4Zg/W4RuS
+        n2lYqfsnhjLLi4ziyrTL6442+7yoW0pnKBeXuNGn7c1e/xGbRR7J646ktHgDypIq2ZYZ7VuRMdWz
+        TKjqIStppahsq6Fg5fqwYRSY38ta0KKps0Hhn4Oxts36PBeZoA0taN/TYphNliYl4j1ftHlCoKzs
+        inr/wOo6r2esmxE2a7z+BST95G7qBAAA
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 google
+      cache-control:
+      - max-age=0, private, must-revalidate
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 17 Jun 2024 06:43:26 GMT
+      server:
+      - Cowboy
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - accept-encoding
+      x-ratelimit-bucket:
+      - general
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '59'
+      x-ratelimit-reset:
+      - '1718606639.159'
+      x-request-id:
+      - F9m3mnU-tHHTnaoP_nCh
+    status:
+      code: 201
+      message: Created
+version: 1

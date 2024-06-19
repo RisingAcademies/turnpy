@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"preview_url": false, "recipient_type": "individual", "to": "+27833365615",
+    body: '{"preview_url": false, "recipient_type": "individual", "to": "27833365615",
       "type": "text", "text": {"body": "Test!"}}'
     headers:
       Accept:
@@ -12,7 +12,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '119'
+      - '118'
       Content-Type:
       - application/json
       User-Agent:
@@ -21,7 +21,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/messages
   response:
     body:
-      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBJGQ0JDQjJFQzU5NTY0N0E3MjYA"}],"meta":{"version":"4.599.1","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
+      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBI1NUIxQUIxNkE2RjMxRDBFOTgA"}],"meta":{"version":"4.603.0","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -34,7 +34,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 13 May 2024 07:36:21 GMT
+      - Mon, 20 May 2024 12:37:31 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -48,9 +48,9 @@ interactions:
       x-ratelimit-remaining:
       - '59'
       x-ratelimit-reset:
-      - '1715585819.228'
+      - '1716208679.268'
       x-request-id:
-      - F878LZQu0vL5GHsDxFeB
+      - F9EyrQbLHjrOx4oDXksh
     status:
       code: 200
       message: OK
