@@ -16,20 +16,26 @@ interactions:
     uri: https://whatsapp.turn.io/v1/contacts/27833365615/claim
   response:
     body:
-      string: '{"errors":["Active conversation claim for \"27833365615\" not found"]}'
+      string: !!binary |
+        H4sIAAAAAAAAA53OvU4DMQzA8XfJXCPn+3zP0anLyUl8KKJXqiY3VX13ImAAMYAYbf1/su+q5der
+        qFm1zvlFHT7mpZaxmjgmznmFhEjg2AbgEiw41OSidhkDDrFJ58Kd1Xx/HNS+v1vnKSJNESTbCM4F
+        D8kKgaWUJPuQE6Vh9+uQUhbuwxg0DjCCpiNOM5rZ2Kc4We3oNNJ6aXL7Y7tJa/wsy+czxrAEXSwU
+        sQYQMYEnJ+AlryVJ1IXMUPnMdfvlAHp/+pLul17PP2v7vV7rrfXlP0893gBdVLZeoQEAAA==
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
       Via:
       - 1.1 google
       cache-control:
       - max-age=0, private, must-revalidate
-      content-length:
-      - '70'
+      content-encoding:
+      - gzip
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 17 May 2024 09:17:29 GMT
+      - Fri, 19 Jul 2024 08:02:24 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -41,11 +47,115 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '59'
+      - '49'
       x-ratelimit-reset:
-      - '1715937479.393'
+      - '1721376179.622'
       x-request-id:
-      - F9A8BRgEVGrDQHUMxWOi
+      - F-OOe-Wf-Cd99FoEHJnD
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"claim_uuid": "45970987-ec37-4465-b3e9-39bbec56cb9b"}'
+    headers:
+      Accept:
+      - application/vnd.v1+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUdXJuIiwiZXhwIjoxNzc4MDAxNjYwLCJpYXQiOjE3MTQ5MzMyNzEsImlzcyI6IlR1cm4iLCJqdGkiOiIzYWNjY2VmYS00ZWFkLTQ0MzctYWNhMi04N2IyOWU3Yjk0OTYiLCJuYmYiOjE3MTQ5MzMyNzAsInN1YiI6Im51bWJlcjozOTc3IiwidHlwIjoiYWNjZXNzIn0.I-qhamvyd3FH_2kJlioHI_jmg4NVROAujNQCYJIVWct1FXWXyVMJoNsyTcLJGhCpQeMaNJpmRVwkgMu7KDFXZg
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '54'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.31.0
+    method: DELETE
+    uri: https://whatsapp.turn.io/v1/contacts/27833365615/claim
+  response:
+    body:
+      string: '{"claim_uuid":"45970987-ec37-4465-b3e9-39bbec56cb9b"}'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Content-Length:
+      - '53'
+      Via:
+      - 1.1 google
+      cache-control:
+      - max-age=0, private, must-revalidate
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Fri, 19 Jul 2024 08:02:24 GMT
+      server:
+      - Cowboy
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - accept-encoding
+      x-ratelimit-bucket:
+      - general
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '48'
+      x-ratelimit-reset:
+      - '1721376179.3'
+      x-request-id:
+      - F-OOe_kmp2Ts9boCZR0F
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/vnd.v1+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUdXJuIiwiZXhwIjoxNzc4MDAxNjYwLCJpYXQiOjE3MTQ5MzMyNzEsImlzcyI6IlR1cm4iLCJqdGkiOiIzYWNjY2VmYS00ZWFkLTQ0MzctYWNhMi04N2IyOWU3Yjk0OTYiLCJuYmYiOjE3MTQ5MzMyNzAsInN1YiI6Im51bWJlcjozOTc3IiwidHlwIjoiYWNjZXNzIn0.I-qhamvyd3FH_2kJlioHI_jmg4NVROAujNQCYJIVWct1FXWXyVMJoNsyTcLJGhCpQeMaNJpmRVwkgMu7KDFXZg
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://whatsapp.turn.io/v1/contacts/27833365615/claim
+  response:
+    body:
+      string: '{"errors":["Active conversation claim for \"27833365615\" not found"]}'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Content-Length:
+      - '70'
+      Via:
+      - 1.1 google
+      cache-control:
+      - max-age=0, private, must-revalidate
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Fri, 19 Jul 2024 08:02:25 GMT
+      server:
+      - Cowboy
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - accept-encoding
+      x-ratelimit-bucket:
+      - general
+      x-ratelimit-limit:
+      - '60'
+      x-ratelimit-remaining:
+      - '47'
+      x-ratelimit-reset:
+      - '1721376179.903'
+      x-request-id:
+      - F-OOfA_ITBevpOYET3ZC
     status:
       code: 404
       message: Not Found
