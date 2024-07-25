@@ -17,10 +17,10 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA53OvU4DMQzA8XfJXCPn+3zP0anLyUl8KKJXqiY3VX13ImAAMYAYbf1/su+q5der
-        qFm1zvlFHT7mpZaxmjgmznmFhEjg2AbgEiw41OSidhkDDrFJ58Kd1Xx/HNS+v1vnKSJNESTbCM4F
-        D8kKgaWUJPuQE6Vh9+uQUhbuwxg0DjCCpiNOM5rZ2Kc4We3oNNJ6aXL7Y7tJa/wsy+czxrAEXSwU
-        sQYQMYEnJ+AlryVJ1IXMUPnMdfvlAHp/+pLul17PP2v7vV7rrfXlP0893gBdVLZeoQEAAA==
+        H4sIAAAAAAAAA52OwU7DMBBE/8XnLrJ313ac7+iJS7SxNyiiKVXtnKr+O1aBA+IA4jij9zRzMzW/
+        XdSMpjbJr+bwkae19MrP88IhFkhiFdhhgORUoSA5dhEleurGpk2KNDHj7X4w+/5wF1ZGZA8kNANn
+        TZAoCxSmSMuQhzj47u6XbmqZpHUHLTLYCOiPdhgZR/RP6AZCfu7oeq56/SO7aa3yotPnmVBSJKsL
+        uEgINkQCpzaBTRQQ3eyzSrfySdbtlwEXHwNf6H5u6+knTd/pZb3WNv3n1P0dxTRcRKEBAAA=
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -35,7 +35,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:24 GMT
+      - Thu, 25 Jul 2024 08:42:26 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -47,16 +47,16 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '49'
+      - '48'
       x-ratelimit-reset:
-      - '1721376179.622'
+      - '1721896979.101'
       x-request-id:
-      - F-OOe-Wf-Cd99FoEHJnD
+      - F-VoJnOlTPSzVKYGwMnF
     status:
       code: 200
       message: OK
 - request:
-    body: '{"claim_uuid": "45970987-ec37-4465-b3e9-39bbec56cb9b"}'
+    body: '{"claim_uuid": "f4e42245-3a3b-4ce9-93ca-d4373f8c8785"}'
     headers:
       Accept:
       - application/vnd.v1+json
@@ -76,7 +76,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/contacts/27833365615/claim
   response:
     body:
-      string: '{"claim_uuid":"45970987-ec37-4465-b3e9-39bbec56cb9b"}'
+      string: '{"claim_uuid":"f4e42245-3a3b-4ce9-93ca-d4373f8c8785"}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -89,7 +89,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:24 GMT
+      - Thu, 25 Jul 2024 08:42:27 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -101,11 +101,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '48'
+      - '47'
       x-ratelimit-reset:
-      - '1721376179.3'
+      - '1721896979.775'
       x-request-id:
-      - F-OOe_kmp2Ts9boCZR0F
+      - F-VoJocNge7n-ZwCiu1I
     status:
       code: 200
       message: OK
@@ -139,7 +139,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:25 GMT
+      - Thu, 25 Jul 2024 08:42:26 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -151,11 +151,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '47'
+      - '46'
       x-ratelimit-reset:
-      - '1721376179.903'
+      - '1721896979.441'
       x-request-id:
-      - F-OOfA_ITBevpOYET3ZC
+      - F-VoJpsEQDiLk98KDeXC
     status:
       code: 404
       message: Not Found

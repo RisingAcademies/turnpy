@@ -96,7 +96,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/media
   response:
     body:
-      string: '{"meta":{"version":"4.641.1","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"},"media":[{"id":"1172453490730308"}]}'
+      string: '{"meta":{"version":"4.646.0","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"},"media":[{"id":"1137466280656841"}]}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -109,7 +109,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:24 GMT
+      - Thu, 25 Jul 2024 08:42:25 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -121,11 +121,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '50'
+      - '49'
       x-ratelimit-reset:
-      - '1721376179.974'
+      - '1721896979.511'
       x-request-id:
-      - F-OOe5VAe82MmM0D-fUD
+      - F-VoJh-I0_rYS_0LYMIB
     status:
       code: 200
       message: OK

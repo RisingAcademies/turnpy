@@ -17,10 +17,10 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA52OwU4EIRBE/4XztmkaGGC+w5OXSU8DhrizbhbmtNl/F1c9GBNjPFblvVRdVZPX
-        c1azap3lRR0+8lLTqLQvVAw50IkNWO0KrBQZDNlsSUi8xWFsuXPizmq+3g5q3+/uuynRZdDGBLDO
-        E8Q1rGDF40ouSkw83P08zJwW7sMhJAvoQcdHDDPSTPgwoUX0TwOtp5Yvf2S33Bo/5+XzjC5i1jAJ
-        MOcAyfgJUIcEQklrg9MIblhy5Lr9PmDCdB/4QvdTr8eftPlOl3ppffnPqdsbVVaEXaEBAAA=
+        H4sIAAAAAAAAA52Ou27DMAwA/0VzWIiULEr+jk5ZDD2owmicBpE8Bfn3qo+hRYcWHUnckXdTLb9c
+        RM2q9Zif1eFjXtYyVl6TCY4RYrYEFllDsD4BhkrIwaIPaRib9Fhij2q+3Q9q399d1iKlIMPkggEb
+        qICncYqxmCkhiU5luPtlmFKW2IdDmixoBpoetZ8tzUQPmk3Q03Gg67nJ9Y/sJq3FJ1k+Y2zNUaMT
+        MJwcsCMDxqe3ohB9xhyw1mHlU1y3Xx4wm+MXdD/39fSTNt/pul5bX/4TdX8FCTFbAqEBAAA=
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -35,7 +35,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:20 GMT
+      - Thu, 25 Jul 2024 08:42:22 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -47,16 +47,16 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '56'
+      - '55'
       x-ratelimit-reset:
-      - '1721376179.334'
+      - '1721896979.649'
       x-request-id:
-      - F-OOes0XE37o5YUCWy7l
+      - F-VoJWSN-Jr4xgoGe8VF
     status:
       code: 200
       message: OK
 - request:
-    body: '{"claim_uuid": "f2f3c95e-1338-4572-9b8b-4c70b259c9da"}'
+    body: '{"claim_uuid": "70eedd17-5693-492d-8271-71d35b12e0bd"}'
     headers:
       Accept:
       - application/vnd.v1+json
@@ -76,7 +76,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/contacts/27833365615/claim
   response:
     body:
-      string: '{"claim_uuid":"f2f3c95e-1338-4572-9b8b-4c70b259c9da"}'
+      string: '{"claim_uuid":"70eedd17-5693-492d-8271-71d35b12e0bd"}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -89,7 +89,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:20 GMT
+      - Thu, 25 Jul 2024 08:42:21 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -101,11 +101,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '55'
+      - '54'
       x-ratelimit-reset:
-      - '1721376179.016'
+      - '1721896979.321'
       x-request-id:
-      - F-OOeuAT2EdupT0Ed51i
+      - F-VoJXgM2teCsh4KDb_C
     status:
       code: 200
       message: OK
@@ -134,7 +134,7 @@ interactions:
     uri: https://whatsapp.turn.io/v1/messages
   response:
     body:
-      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBJENzc3MTlFMUFDMTAyQUQ5OUUA"}],"meta":{"version":"4.641.1","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
+      string: '{"messages":[{"id":"wamid.HBgLMjc4MzMzNjU2MTUVAgARGBI1NDA0OTk4NjVDMTYyQUYyQTAA"}],"meta":{"version":"4.646.0","backend":{"name":"WhatsApp","version":"latest"},"api_status":"stable"}}'
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -147,7 +147,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Fri, 19 Jul 2024 08:02:22 GMT
+      - Thu, 25 Jul 2024 08:42:23 GMT
       server:
       - Cowboy
       strict-transport-security:
@@ -159,11 +159,11 @@ interactions:
       x-ratelimit-limit:
       - '60'
       x-ratelimit-remaining:
-      - '54'
+      - '53'
       x-ratelimit-reset:
-      - '1721376179.682'
+      - '1721896979.987'
       x-request-id:
-      - F-OOevO1KFbMBkcEd52i
+      - F-VoJYv8YEpOh94JWNSD
     status:
       code: 200
       message: OK
