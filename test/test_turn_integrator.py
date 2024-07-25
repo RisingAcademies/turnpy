@@ -38,6 +38,7 @@ def release_any_claim(test_config):
 @pytest.mark.vcr()
 def test_obtain_contact_profile():
     test_config = load_test_config()
+
     response = turn_integrator.obtain_contact_profile(test_config["test_number"], test_config['test_line'])
     response_text = json.loads(response.text)
 
@@ -49,6 +50,7 @@ def test_obtain_contact_profile():
 def test_update_contact_profile():
     test_config = load_test_config()
     profile_data = { 'chat_per_week': '1' }
+
     response = turn_integrator.update_contact_profile(test_config["test_number"], test_config['test_line'], profile_data)
     response_text = json.loads(response.text)
 
@@ -59,6 +61,7 @@ def test_update_contact_profile():
 def test_send_text_message():
     test_config = load_test_config()
     release_any_claim(test_config)
+
     response = turn_integrator.send_text_message(test_config["test_number"], test_config['test_line'], 'Test!')
     response_text = json.loads(response.text)
 
@@ -96,6 +99,7 @@ def test_send_interactive_message_button():
 def test_send_interactive_message_list():
     test_config = load_test_config()
     release_any_claim(test_config)
+
     response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'list',
         {
             "header_text": "Testheader",
@@ -169,6 +173,7 @@ def test_determine_and_release_claim():
 def test_start_journey():
     test_config = load_test_config()
     release_any_claim(test_config)
+
     response = turn_integrator.start_journey(f'+{test_config["test_number"]}', test_config['test_line'], test_config['test_journey'])
     response_text = json.loads(response.text)
 
