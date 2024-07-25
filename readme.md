@@ -21,6 +21,10 @@ This package currently supports sending text and media messages as well as obtai
 
 Details are in the comments in the code itself.
 
+## Testing
+
+You can run the test suite for this repo at any time if you have pytest installed. Not that the API interactions have been recorded with pytest-vcr. To re-run them you will need to delete or rename the `test/cassettes` folder. Note that test messages will not be sent unless the `test_number` specified in `turn_config.json` has an active conversation window. A new window can be opened by messaging something to the `test_line` from a device using `test_number`. It is recommended that one messages `test_number` first before running the test suite if new cassettes are to be recorded.
+
 ## Involvement
 
 Please assist in improving this project! Please open issues, send PRs and suggestions welcome.
