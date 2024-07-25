@@ -72,6 +72,7 @@ def test_send_text_message():
 def test_send_interactive_message_button():
     test_config = load_test_config()
     release_any_claim(test_config)
+
     response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'button',
         {
             "header_text": "Testheader",
