@@ -2,3 +2,4 @@
 venv/
 turn_config.json
 .pytest_cache/
+test/cassettes/

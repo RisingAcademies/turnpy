@@ -143,8 +143,7 @@ The sections argument is a dictionary with a few attrbutes:
 'header_image' - id of a saved image, optional
 'body_text' - text, required
 'footer_text' - text, optional
-'buttons' - array, required array of buttons with text and callback_id, used if the interactive_type
-is a 'button'.
+'buttons' - array, required array of buttons with text and callback_id, used if the interactive_type is a 'button'.
 'list_button' - text, required text of the list button for interactive_type = 'list'
 'list_title' - text, required title text for the list for interactive_type = 'list'
 'list_items' - array, required array of items with text and callback_id for interactive_type = 'list'

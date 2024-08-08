@@ -24,9 +24,21 @@ def test_eval_credentials():
     }
     assert turn_integrator.eval_credentials(config_json) == 'ABCD'
 
+# If a specific number has been claimed by a journey sending a message will have no effect. So ensure the test
+# number has been released from any claim before trying to test interaction with it.
+def release_any_claim(test_config):
+    response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
+    response_text = json.loads(response.text)
+
+    if response.status_code == 200 and 'uuid' in response_text:
+        claim_uuid = response_text['uuid']
+
+        turn_integrator.release_claim(test_config['test_number'], test_config['test_line'], claim_uuid)
+
 @pytest.mark.vcr()
 def test_obtain_contact_profile():
     test_config = load_test_config()
+
     response = turn_integrator.obtain_contact_profile(test_config["test_number"], test_config['test_line'])
     response_text = json.loads(response.text)
 
@@ -38,6 +50,7 @@ def test_obtain_contact_profile():
 def test_update_contact_profile():
     test_config = load_test_config()
     profile_data = { 'chat_per_week': '1' }
+
     response = turn_integrator.update_contact_profile(test_config["test_number"], test_config['test_line'], profile_data)
     response_text = json.loads(response.text)
 
@@ -47,6 +60,8 @@ def test_update_contact_profile():
 @pytest.mark.vcr()
 def test_send_text_message():
     test_config = load_test_config()
+    release_any_claim(test_config)
+
     response = turn_integrator.send_text_message(test_config["test_number"], test_config['test_line'], 'Test!')
     response_text = json.loads(response.text)
 
@@ -56,6 +71,8 @@ def test_send_text_message():
 @pytest.mark.vcr()
 def test_send_interactive_message_button():
     test_config = load_test_config()
+    release_any_claim(test_config)
+
     response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'button',
         {
             "header_text": "Testheader",
@@ -82,6 +99,8 @@ def test_send_interactive_message_button():
 @pytest.mark.vcr()
 def test_send_interactive_message_list():
     test_config = load_test_config()
+    release_any_claim(test_config)
+
     response = turn_integrator.send_interactive_message(test_config["test_number"], test_config['test_line'], 'list',
         {
             "header_text": "Testheader",
@@ -123,6 +142,8 @@ def test_save_media():
 @pytest.mark.vcr()
 def test_determine_claim_not_found():
     test_config = load_test_config()
+    release_any_claim(test_config)
+
     response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
     response_text = json.loads(response.text)
 
@@ -130,17 +151,11 @@ def test_determine_claim_not_found():
     assert 'conversation claim' in response_text['errors'][0]
 
 @pytest.mark.vcr()
-def test_determine_claim_found():
+def test_determine_and_release_claim():
     test_config = load_test_config()
-    response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
-    response_text = json.loads(response.text)
+    release_any_claim(test_config)
+    turn_integrator.start_journey(f'+{test_config["test_number"]}', test_config['test_line'], test_config['test_journey'])
 
-    assert response.status_code == 200
-    assert response_text['uuid']
-
-@pytest.mark.vcr()
-def test_release_claim():
-    test_config = load_test_config()
     response = turn_integrator.determine_claim(test_config['test_number'], test_config['test_line'])
     response_text = json.loads(response.text)
 
@@ -158,6 +173,8 @@ def test_release_claim():
 @pytest.mark.vcr()
 def test_start_journey():
     test_config = load_test_config()
+    release_any_claim(test_config)
+
     response = turn_integrator.start_journey(f'+{test_config["test_number"]}', test_config['test_line'], test_config['test_journey'])
     response_text = json.loads(response.text)
 
