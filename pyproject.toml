@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "turnpy"
+version = "1.1.0"
+description = "A package to help you connect to the Turn.io API from a Python app"
+authors = [
+    "Rising Academies",
+    "Turn.io",
+    "Raoul de Villiers",
+]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+requests = ">=2.25.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "==8.2.0"
+pytest-vcr = "==1.0.2"
+build = "*"
+twine = "*"
+wheel = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
