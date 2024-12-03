@@ -23,8 +23,6 @@ def load_credentials(file_name: str, line_name: str) -> str:
 """
 Determine if the Turn credentials are still valid.
 """
-
-
 def eval_credentials(config_json: json) -> str:
     with open("turn_config.json", "r") as file:
         turn_config = json.load(file)
@@ -49,8 +47,6 @@ Obtain a contact profile.
 See documentation here:
 https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 """
-
-
 def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -69,8 +65,6 @@ def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
 Supply only the fields that need updating. See documentation here:
 https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 """
-
-
 def update_contact_profile(
     msisdn: str, line_name: str, profile_data: json
 ) -> requests.Response:
@@ -94,8 +88,6 @@ Send the different kinds of messages.
 
 See documentation here: https://whatsapp.turn.io/docs/api/messages
 """
-
-
 def send_message(line_name: str, message_data: json) -> requests.Response:
     auth_headers = {"Authorization": f"Bearer {turn_credentials(line_name)}"}
 
@@ -110,8 +102,6 @@ Send a text message.
 The recipient_type is currrently hardcoded to "individual" as there are no API docs pointing to
 another type of recipient.
 """
-
-
 def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Response:
     message_data = {
         "preview_url": False,
@@ -172,8 +162,6 @@ The sections argument is a dictionary with a few attrbutes:
 Further details about the API call here:
 https://whatsapp.turn.io/docs/api/messages#interactive-messages
 """
-
-
 def send_interactive_message(
     msisdn: str, line_name: str, interactive_type: str, sections: json
 ) -> requests.Response:
@@ -236,8 +224,6 @@ Save media to Turn for sending.
 See the supported file types on the Turn documentation here:
 https://whatsapp.turn.io/docs/api/media#supported-file-types
 """
-
-
 def save_media(line_name: str, type: str, file_binary: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -257,8 +243,6 @@ or deleting one.
 
 See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 """
-
-
 def determine_claim(msisdn: str, line_name: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -293,8 +277,6 @@ Start a journey for a specific user.
 
 Details here: https://whatsapp.turn.io/docs/api/stacks
 """
-
-
 def start_journey(msisdn: str, line_name: str, stack_uuid: str) -> requests.Response:
     journey_data = {"wa_id": msisdn}
 
