@@ -5,11 +5,11 @@ from datetime import datetime
 import requests
 from requests.auth import HTTPBasicAuth
 
-
 """SETUP"""
 """
 Load and evaluate the cedentials from the turn_config.json file.
 """
+
 logger = logging.getLogger(__name__)
 
 
@@ -19,10 +19,10 @@ def load_credentials(file_name: str, line_name: str) -> str:
 
     return turn_config["lines"][line_name]
 
-
 """
 Determine if the Turn credentials are still valid.
 """
+
 def eval_credentials(config_json: json) -> str:
     with open("turn_config.json", "r") as file:
         turn_config = json.load(file)
@@ -39,7 +39,6 @@ def turn_credentials(line_name):
 
     return eval_credentials(config_json)
 
-
 """CONTACTS"""
 """
 Obtain a contact profile.
@@ -47,6 +46,7 @@ Obtain a contact profile.
 See documentation here:
 https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 """
+
 def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -59,12 +59,12 @@ def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
     logging.debug("Obtained contact profile response", response.text)
     return response
 
-
 """Update a contact profile.
 
 Supply only the fields that need updating. See documentation here:
 https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 """
+
 def update_contact_profile(
     msisdn: str, line_name: str, profile_data: json
 ) -> requests.Response:
@@ -81,13 +81,13 @@ def update_contact_profile(
     logging.debug("Updated contact profile response", response.text)
     return response
 
-
 """ MESSAGES"""
 """
 Send the different kinds of messages.
 
 See documentation here: https://whatsapp.turn.io/docs/api/messages
 """
+
 def send_message(line_name: str, message_data: json) -> requests.Response:
     auth_headers = {"Authorization": f"Bearer {turn_credentials(line_name)}"}
 
@@ -95,13 +95,13 @@ def send_message(line_name: str, message_data: json) -> requests.Response:
         "https://whatsapp.turn.io/v1/messages", headers=auth_headers, json=message_data
     )
 
-
 """
 Send a text message.
 
 The recipient_type is currrently hardcoded to "individual" as there are no API docs pointing to
 another type of recipient.
 """
+
 def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Response:
     message_data = {
         "preview_url": False,
@@ -147,7 +147,6 @@ def send_media_message(
     logging.debug("Sent media message response", response.text)
     return response
 
-
 """Send an interactive message with a dropdown or buttons.
 
 The sections argument is a dictionary with a few attrbutes:
@@ -162,6 +161,7 @@ The sections argument is a dictionary with a few attrbutes:
 Further details about the API call here:
 https://whatsapp.turn.io/docs/api/messages#interactive-messages
 """
+
 def send_interactive_message(
     msisdn: str, line_name: str, interactive_type: str, sections: json
 ) -> requests.Response:
@@ -216,7 +216,6 @@ def send_interactive_message(
     logging.debug("Sent interactive message response", response.text)
     return response
 
-
 """MEDIA"""
 """
 Save media to Turn for sending.
@@ -224,6 +223,7 @@ Save media to Turn for sending.
 See the supported file types on the Turn documentation here:
 https://whatsapp.turn.io/docs/api/media#supported-file-types
 """
+
 def save_media(line_name: str, type: str, file_binary: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -235,7 +235,6 @@ def save_media(line_name: str, type: str, file_binary: str) -> requests.Response
     logging.debug("Saved media response", response.text)
     return response
 
-
 """CLAIMS"""
 """
 Manage claimed numbers, like determining a claim by a Turn process line a Journey,
@@ -243,6 +242,7 @@ or deleting one.
 
 See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 """
+
 def determine_claim(msisdn: str, line_name: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
@@ -270,13 +270,13 @@ def release_claim(msisdn: str, line_name: str, claim_uuid: str) -> requests.Resp
     logging.debug("Released claim response", response.text)
     return response
 
-
 """JOURNEYS"""
 """
 Start a journey for a specific user.
 
 Details here: https://whatsapp.turn.io/docs/api/stacks
 """
+
 def start_journey(msisdn: str, line_name: str, stack_uuid: str) -> requests.Response:
     journey_data = {"wa_id": msisdn}
 
