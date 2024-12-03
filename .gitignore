@@ -41,5 +41,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Secrets files
 .secrets
 secrets
