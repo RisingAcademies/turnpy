@@ -230,6 +230,63 @@ def save_media(line_name: str, type: str, file_binary: str) -> requests.Response
     print(response.text)
     return response
 
+"""TEMPLATES"""
+
+"""
+Send a templated message to a WhatsApp user.
+
+The arguments are:
+'msisdn' - string, required WhatsApp ID to send to
+'line_name' - string, required Turn line to use
+'template_name' - string, required name of the template to use
+'header_params' - list, optional list of strings for header placeholders
+'body_params' - list, optional list of strings for body placeholders
+'language' - string, optional language code for the template (default: 'en')
+
+Further details about the API call here:
+https://whatsapp.turn.io/docs/api/messages#template-messages
+"""
+
+def send_template_message(msisdn: str, line_name: str, template_name: str, header_params: list = None, body_params: list = None, language: str = 'en') -> requests.Response:
+
+    # Get credentials and config
+    config_json = load_credentials('turn_config.json', line_name)
+    template_namespace = config_json['template_namespace']
+
+    # Build the message data
+    message_data = {
+        "to": msisdn,
+        "type": "template",
+        "template": {
+            "namespace": template_namespace,
+            "name": template_name,
+            "language": {
+                "code": language,
+                "policy": "deterministic"
+            },
+            "components": []
+        }
+    }
+
+    if header_params:
+        header_component = {
+            "type": "header",
+            "parameters": [{"type": "text", "text": param} for param in header_params]
+        }
+        message_data["template"]["components"].append(header_component)
+
+    if body_params:
+        body_component = {
+            "type": "body",
+            "parameters": [{"type": "text", "text": param} for param in body_params]
+        }
+        message_data["template"]["components"].append(body_component)
+
+    response = send_message(line_name, message_data)
+    print(response.text)
+    return response
+
+
 """CLAIMS"""
 """
 Manage claimed numbers, like determining a claim by a Turn process line a Journey,

@@ -2,10 +2,12 @@
   "lines": {
       "turn_line_1": {
         "token": "token_on_turn_for_line_1",
+        "template_namespace": "namespace_of_templates_for_line_1",
         "expiry": "expiry_date_in_format Apr 2, 2025 1:16 PM"
       },
       "turn_line_2": {
         "token": "token_on_turn_for_line_2",
+        "template_namespace": "namespace_of_templates_for_line_2",
         "expiry": "expiry_date_in_format May 2, 2025 1:16 PM"
       }
     },

@@ -11,6 +11,7 @@ def load_test_config():
         "test_line": turn_config["test_line"],
         "test_number": turn_config["test_number"],
         "test_journey": turn_config["test_journey"],
+        "test_template": turn_config["test_template"],
     }
 
 
@@ -208,3 +209,22 @@ def test_start_journey():
 
     assert response.status_code == 201
     assert response_text["success"]
+
+
+@pytest.mark.vcr()
+def test_send_template_message():
+    test_config = load_test_config()
+    release_any_claim(test_config)
+
+    response = turn_integrator.send_template_message(
+        test_config["test_number"],
+        test_config["test_line"],
+        test_config["test_template"],
+        header_params=["Test Header"],
+        body_params=["Test Body Param 1"],
+        language="en"
+    )
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text["messages"][0]["id"]
