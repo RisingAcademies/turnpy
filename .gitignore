@@ -41,3 +41,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Secrets
+.secrets
+secrets
