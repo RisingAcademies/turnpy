@@ -1,6 +1,8 @@
-import turnpy.turn_integrator as turn_integrator
-import pytest
 import json
+
+import pytest
+
+import turnpy.turn_integrator as turn_integrator
 
 
 def load_test_config():
@@ -222,7 +224,7 @@ def test_send_template_message():
         test_config["test_template"],
         header_params=["Test Header"],
         body_params=["Test Body Param 1"],
-        language="en"
+        language="en",
     )
     response_text = json.loads(response.text)
 
