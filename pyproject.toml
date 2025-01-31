@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turnpy"
-version = "1.2.0"
+version = "1.2.1"
 description = "A package to help you connect to the Turn.io API from a Python app"
 authors = [
     "Rising Academies",
