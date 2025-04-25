@@ -115,7 +115,7 @@ def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Res
     return response
 
 def send_media_message(
-    msisdn: str, line_name: str, media_type: str, media_id: str, caption=""
+    msisdn: str, line_name: str, media_type: str, media_id: str, caption="", message: str=""
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
@@ -140,6 +140,9 @@ def send_media_message(
     elif media_type == "video":
         message_data["type"] = "video"
         message_data["video"] = {"id": media_id, "caption": caption}
+
+    if message:
+        message_data["text"] = {"body": message}
 
     response = send_message(line_name, message_data)
     logging.debug("Sent media message response", response.text)
@@ -311,6 +314,8 @@ def determine_claim(msisdn: str, line_name: str) -> requests.Response:
     )
     logging.debug("Determined claim response", response.text)
     return response
+
+
 
 def release_claim(msisdn: str, line_name: str, claim_uuid: str) -> requests.Response:
     claim_data = {"claim_uuid": claim_uuid}
