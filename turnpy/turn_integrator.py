@@ -7,7 +7,7 @@ from requests.auth import HTTPBasicAuth
 
 """SETUP"""
 """
-Load and evaluate the cedentials from the turn_config.json file.
+Load and evaluate the credentials from the turn_config.json file.
 """
 
 logger = logging.getLogger(__name__)
