@@ -5,7 +5,27 @@ from datetime import datetime
 import httpx
 import requests
 
-client = httpx.AsyncClient()
+
+class AsyncTurnClient:
+    def __init__(self):
+        self._client = None
+
+    async def get_client(self):
+        if self._client is None:
+            self._client = httpx.AsyncClient(
+                base_url="https://whatsapp.turn.io/v1", timeout=30.0
+            )
+        return self._client
+
+    async def close(self):
+        if self._client:
+            await self._client.aclose()
+            self._client = None
+
+
+...
+
+turn_client = AsyncTurnClient()
 
 
 """SETUP"""
@@ -61,10 +81,8 @@ async def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Respon
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
-
-    response = await client.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile", headers=auth_headers
-    )
+    client = await turn_client.get_client()
+    response = await client.get(f"contacts/{msisdn}/profile", headers=auth_headers)
 
     logging.debug(f"Obtained contact profile response: {response.text}")
     return response
@@ -86,8 +104,9 @@ async def update_contact_profile(
         "Accept": "application/vnd.v1+json",
     }
 
+    client = await turn_client.get_client()
     response = await client.patch(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile",
+        f"contacts/{msisdn}/profile",
         headers=auth_headers,
         json=profile_data,
     )
@@ -107,9 +126,8 @@ async def send_message(line_name: str, message_data: json) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {"Authorization": f"Bearer {turn_creds}"}
 
-    response = await client.post(
-        "https://whatsapp.turn.io/v1/messages", headers=auth_headers, json=message_data
-    )
+    client = await turn_client.get_client()
+    response = await client.post("messages", headers=auth_headers, json=message_data)
     logger.info("Sent a message...")
     return response
 
@@ -264,9 +282,9 @@ async def save_media(line_name: str, type: str, file_binary: str) -> requests.Re
         "Authorization": f"Bearer {turn_creds}",
         "Content-Type": type,
     }
-    response = await client.post(
-        "https://whatsapp.turn.io/v1/media", headers=auth_headers, data=file_binary
-    )
+
+    client = await turn_client.get_client()
+    response = await client.post("media", headers=auth_headers, data=file_binary)
     logger.info(f"Saved media response {response.text}")
     return response
 
@@ -347,9 +365,9 @@ async def determine_claim(msisdn: str, line_name: str) -> requests.Response:
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
-    response = await client.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim", headers=auth_headers
-    )
+
+    client = await turn_client.get_client()
+    response = await client.get(f"contacts/{msisdn}/claim", headers=auth_headers)
     logger.debug(f"Determined claim response: {response.text}")
     return response
 
@@ -364,8 +382,10 @@ async def release_claim(
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
+
+    client = await turn_client.get_client()
     response = await client.delete(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim",
+        f"contacts/{msisdn}/claim",
         headers=auth_headers,
         json=claim_data,
     )
@@ -391,8 +411,10 @@ async def start_journey(
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
+
+    client = await turn_client.get_client()
     response = await client.post(
-        f"https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start",
+        f"stacks/{stack_uuid}/start",
         headers=auth_headers,
         json=journey_data,
     )
