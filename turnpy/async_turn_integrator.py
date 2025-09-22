@@ -23,8 +23,6 @@ class AsyncTurnClient:
             self._client = None
 
 
-...
-
 turn_client = AsyncTurnClient()
 
 
@@ -75,13 +73,16 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 """
 
 
-async def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
+async def obtain_contact_profile(
+    msisdn: str, line_name: str, client: httpx.AsyncClient = None
+) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.get(f"contacts/{msisdn}/profile", headers=auth_headers)
 
     logging.debug(f"Obtained contact profile response: {response.text}")
@@ -96,7 +97,7 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 
 async def update_contact_profile(
-    msisdn: str, line_name: str, profile_data: json
+    msisdn: str, line_name: str, profile_data: json, client: httpx.AsyncClient = None
 ) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
@@ -104,7 +105,8 @@ async def update_contact_profile(
         "Accept": "application/vnd.v1+json",
     }
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.patch(
         f"contacts/{msisdn}/profile",
         headers=auth_headers,
@@ -122,11 +124,14 @@ See documentation here: https://whatsapp.turn.io/docs/api/messages
 """
 
 
-async def send_message(line_name: str, message_data: json) -> requests.Response:
+async def send_message(
+    line_name: str, message_data: json, client: httpx.AsyncClient = None
+) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {"Authorization": f"Bearer {turn_creds}"}
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.post("messages", headers=auth_headers, json=message_data)
     logger.info("Sent a message...")
     return response
@@ -276,14 +281,17 @@ https://whatsapp.turn.io/docs/api/media#supported-file-types
 """
 
 
-async def save_media(line_name: str, type: str, file_binary: str) -> requests.Response:
+async def save_media(
+    line_name: str, type: str, file_binary: str, client: httpx.AsyncClient = None
+) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
         "Content-Type": type,
     }
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.post("media", headers=auth_headers, data=file_binary)
     logger.info(f"Saved media response {response.text}")
     return response
@@ -359,21 +367,24 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 """
 
 
-async def determine_claim(msisdn: str, line_name: str) -> requests.Response:
+async def determine_claim(
+    msisdn: str, line_name: str, client: httpx.AsyncClient = None
+) -> requests.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
         "Accept": "application/vnd.v1+json",
     }
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.get(f"contacts/{msisdn}/claim", headers=auth_headers)
     logger.debug(f"Determined claim response: {response.text}")
     return response
 
 
 async def release_claim(
-    msisdn: str, line_name: str, claim_uuid: str
+    msisdn: str, line_name: str, claim_uuid: str, client: httpx.AsyncClient = None
 ) -> requests.Response:
     claim_data = {"claim_uuid": claim_uuid}
 
@@ -383,7 +394,8 @@ async def release_claim(
         "Accept": "application/vnd.v1+json",
     }
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
     response = await client.delete(
         f"contacts/{msisdn}/claim",
         headers=auth_headers,
@@ -402,7 +414,7 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 
 
 async def start_journey(
-    msisdn: str, line_name: str, stack_uuid: str
+    msisdn: str, line_name: str, stack_uuid: str, client: httpx.AsyncClient = None
 ) -> requests.Response:
     journey_data = {"wa_id": msisdn}
 
@@ -412,7 +424,9 @@ async def start_journey(
         "Accept": "application/vnd.v1+json",
     }
 
-    client = await turn_client.get_client()
+    if not client:
+        client = await turn_client.get_client()
+
     response = await client.post(
         f"stacks/{stack_uuid}/start",
         headers=auth_headers,
