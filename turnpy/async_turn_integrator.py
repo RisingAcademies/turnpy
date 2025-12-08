@@ -13,7 +13,9 @@ class AsyncTurnClient:
     async def get_client(self):
         if self._client is None:
             self._client = httpx.AsyncClient(
-                base_url="https://whatsapp.turn.io/v1", timeout=30.0
+                base_url="https://whatsapp.turn.io/v1",
+                timeout=30.0,
+                transport=httpx.AsyncHTTPTransport(retries=3),
             )
         return self._client
 
@@ -75,7 +77,7 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 
 async def obtain_contact_profile(
     msisdn: str, line_name: str, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
@@ -98,7 +100,7 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 async def update_contact_profile(
     msisdn: str, line_name: str, profile_data: json, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
@@ -126,7 +128,7 @@ See documentation here: https://whatsapp.turn.io/docs/api/messages
 
 async def send_message(
     line_name: str, message_data: json, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {"Authorization": f"Bearer {turn_creds}"}
 
@@ -147,7 +149,7 @@ another type of recipient.
 
 async def send_text_message(
     msisdn: str, line_name: str, message: str
-) -> requests.Response:
+) -> httpx.Response:
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
@@ -168,7 +170,7 @@ async def send_media_message(
     media_id: str,
     caption="",
     message: str = "",
-) -> requests.Response:
+) -> httpx.Response:
     message_data = {
         "to": msisdn,
         "recipient_type": "individual",
@@ -219,7 +221,7 @@ https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
 async def send_interactive_message(
     msisdn: str, line_name: str, interactive_type: str, sections: json
-) -> requests.Response:
+) -> httpx.Response:
     message_data = {
         "to": msisdn,
         "type": "interactive",
@@ -283,7 +285,7 @@ https://whatsapp.turn.io/docs/api/media#supported-file-types
 
 async def save_media(
     line_name: str, type: str, file_binary: str, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
@@ -322,7 +324,7 @@ async def send_template_message(
     header_params: list = None,
     body_params: list = None,
     language: str = "en",
-) -> requests.Response:
+) -> httpx.Response:
     # Get credentials and config
     config_json = await load_credentials("turn_config.json", line_name)
     template_namespace = config_json["template_namespace"]
@@ -369,7 +371,7 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 
 async def determine_claim(
     msisdn: str, line_name: str, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
@@ -385,7 +387,7 @@ async def determine_claim(
 
 async def release_claim(
     msisdn: str, line_name: str, claim_uuid: str, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     claim_data = {"claim_uuid": claim_uuid}
 
     turn_creds = await turn_credentials(line_name)
@@ -415,7 +417,7 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 
 async def start_journey(
     msisdn: str, line_name: str, stack_uuid: str, client: httpx.AsyncClient = None
-) -> requests.Response:
+) -> httpx.Response:
     journey_data = {"wa_id": msisdn}
 
     turn_creds = await turn_credentials(line_name)
