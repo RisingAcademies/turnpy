@@ -16,6 +16,11 @@ class AsyncTurnClient:
                 base_url="https://whatsapp.turn.io/v1",
                 timeout=30.0,
                 transport=httpx.AsyncHTTPTransport(retries=3),
+                limits=httpx.Limits(
+                    max_connections=100,
+                    max_keepalive_connections=20,
+                    keepalive_expiry=10.0,
+                ),
             )
         return self._client
 
