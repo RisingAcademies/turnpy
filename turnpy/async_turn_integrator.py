@@ -81,7 +81,7 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 
 
 async def obtain_contact_profile(
-    msisdn: str, line_name: str, client: httpx.AsyncClient = None
+    msisdn: str, bsuid: str, line_name: str, client: httpx.AsyncClient = None
 ) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
@@ -90,7 +90,12 @@ async def obtain_contact_profile(
     }
     if not client:
         client = await turn_client.get_client()
-    response = await client.get(f"contacts/{msisdn}/profile", headers=auth_headers)
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
+    response = await client.get(
+        f"contacts/{whatsapp_user_identifier}/profile", headers=auth_headers
+    )
 
     logging.debug(f"Obtained contact profile response: {response.text}")
     return response
@@ -104,7 +109,11 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 
 async def update_contact_profile(
-    msisdn: str, line_name: str, profile_data: json, client: httpx.AsyncClient = None
+    msisdn: str,
+    bsuid: str,
+    line_name: str,
+    profile_data: json,
+    client: httpx.AsyncClient = None,
 ) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
@@ -114,8 +123,11 @@ async def update_contact_profile(
 
     if not client:
         client = await turn_client.get_client()
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = await client.patch(
-        f"contacts/{msisdn}/profile",
+        f"contacts/{whatsapp_user_identifier}/profile",
         headers=auth_headers,
         json=profile_data,
     )
@@ -153,12 +165,13 @@ another type of recipient.
 
 
 async def send_text_message(
-    msisdn: str, line_name: str, message: str
+    msisdn: str, bsuid: str, line_name: str, message: str
 ) -> httpx.Response:
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
-        "to": f"{msisdn}",
+        "to": msisdn,
+        "recipient": bsuid,
         "type": "text",
         "text": {"body": message},
     }
@@ -170,6 +183,7 @@ async def send_text_message(
 
 async def send_media_message(
     msisdn: str,
+    bsuid: str,
     line_name: str,
     media_type: str,
     media_id: str,
@@ -178,6 +192,7 @@ async def send_media_message(
 ) -> httpx.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "recipient_type": "individual",
     }
     if media_type == "audio":
@@ -225,10 +240,11 @@ https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
 
 async def send_interactive_message(
-    msisdn: str, line_name: str, interactive_type: str, sections: json
+    msisdn: str, bsuid: str, line_name: str, interactive_type: str, sections: json
 ) -> httpx.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "type": "interactive",
         "interactive": {
             "type": interactive_type,
@@ -310,7 +326,8 @@ async def save_media(
 Send a templated message to a WhatsApp user.
 
 The arguments are:
-'msisdn' - string, required WhatsApp ID to send to
+'msisdn' - string, an optional WhatsApp ID based on the phone number to send to
+'bsuid' - string, an optional alternative identifier for users who opted out of sharing their phone number
 'line_name' - string, required Turn line to use
 'template_name' - string, required name of the template to use
 'header_params' - list, optional list of strings for header placeholders
@@ -324,6 +341,7 @@ https://whatsapp.turn.io/docs/api/messages#template-messages
 
 async def send_template_message(
     msisdn: str,
+    bsuid: str,
     line_name: str,
     template_name: str,
     header_params: list = None,
@@ -337,6 +355,7 @@ async def send_template_message(
     # Build the message data
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "type": "template",
         "template": {
             "namespace": template_namespace,
@@ -375,7 +394,7 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 
 
 async def determine_claim(
-    msisdn: str, line_name: str, client: httpx.AsyncClient = None
+    msisdn: str, bsuid: str, line_name: str, client: httpx.AsyncClient = None
 ) -> httpx.Response:
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
@@ -385,13 +404,23 @@ async def determine_claim(
 
     if not client:
         client = await turn_client.get_client()
-    response = await client.get(f"contacts/{msisdn}/claim", headers=auth_headers)
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
+    response = await client.get(
+        f"contacts/{whatsapp_user_identifier}/claim", headers=auth_headers
+    )
+
     logger.debug(f"Determined claim response: {response.text}")
     return response
 
 
 async def release_claim(
-    msisdn: str, line_name: str, claim_uuid: str, client: httpx.AsyncClient = None
+    msisdn: str,
+    bsuid: str,
+    line_name: str,
+    claim_uuid: str,
+    client: httpx.AsyncClient = None,
 ) -> httpx.Response:
     claim_data = {"claim_uuid": claim_uuid}
 
@@ -403,8 +432,11 @@ async def release_claim(
 
     if not client:
         client = await turn_client.get_client()
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = await client.delete(
-        f"contacts/{msisdn}/claim",
+        f"contacts/{whatsapp_user_identifier}/claim",
         headers=auth_headers,
         json=claim_data,
     )
@@ -421,10 +453,12 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 
 
 async def start_journey(
-    msisdn: str, line_name: str, stack_uuid: str, client: httpx.AsyncClient = None
+    msisdn: str,
+    bsuid: str,
+    line_name: str,
+    stack_uuid: str,
+    client: httpx.AsyncClient = None,
 ) -> httpx.Response:
-    journey_data = {"wa_id": msisdn}
-
     turn_creds = await turn_credentials(line_name)
     auth_headers = {
         "Authorization": f"Bearer {turn_creds}",
@@ -433,6 +467,8 @@ async def start_journey(
 
     if not client:
         client = await turn_client.get_client()
+
+    journey_data = {"wa_id": msisdn} if msisdn else {"user_id": bsuid}
 
     response = await client.post(
         f"stacks/{stack_uuid}/start",

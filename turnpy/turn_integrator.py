@@ -51,14 +51,19 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 """
 
 
-def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
+def obtain_contact_profile(
+    msisdn: str, bsuid: str, line_name: str
+) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
         "Accept": "application/vnd.v1+json",
     }
 
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile", headers=auth_headers
+        f"https://whatsapp.turn.io/v1/contacts/{whatsapp_user_identifier}/profile",
+        headers=auth_headers,
     )
     logging.debug(f"Obtained contact profile response: {response.text}")
     return response
@@ -72,15 +77,17 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 
 def update_contact_profile(
-    msisdn: str, line_name: str, profile_data: json
+    msisdn: str, bsuid: str, line_name: str, profile_data: json
 ) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
         "Accept": "application/vnd.v1+json",
     }
 
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.patch(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile",
+        f"https://whatsapp.turn.io/v1/contacts/{whatsapp_user_identifier}/profile",
         headers=auth_headers,
         json=profile_data,
     )
@@ -112,11 +119,14 @@ another type of recipient.
 """
 
 
-def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Response:
+def send_text_message(
+    msisdn: str, bsuid: str, line_name: str, message: str
+) -> requests.Response:
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
-        "to": f"{msisdn}",
+        "to": msisdn,
+        "recipient": bsuid,
         "type": "text",
         "text": {"body": message},
     }
@@ -128,6 +138,7 @@ def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Res
 
 def send_media_message(
     msisdn: str,
+    bsuid: str,
     line_name: str,
     media_type: str,
     media_id: str,
@@ -136,6 +147,7 @@ def send_media_message(
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "recipient_type": "individual",
     }
     if media_type == "audio":
@@ -183,10 +195,11 @@ https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
 
 def send_interactive_message(
-    msisdn: str, line_name: str, interactive_type: str, sections: json
+    msisdn: str, bsuid: str, line_name: str, interactive_type: str, sections: json
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "type": "interactive",
         "interactive": {
             "type": interactive_type,
@@ -264,7 +277,8 @@ def save_media(line_name: str, type: str, file_binary: str) -> requests.Response
 Send a templated message to a WhatsApp user.
 
 The arguments are:
-'msisdn' - string, required WhatsApp ID to send to
+'msisdn' - string, an optional WhatsApp ID based on the phone number to send to
+'bsuid' - string, an optional alternative identifier for users who opted out of sharing their phone number
 'line_name' - string, required Turn line to use
 'template_name' - string, required name of the template to use
 'header_params' - list, optional list of strings for header placeholders
@@ -278,6 +292,7 @@ https://whatsapp.turn.io/docs/api/messages#template-messages
 
 def send_template_message(
     msisdn: str,
+    bsuid: str,
     line_name: str,
     template_name: str,
     header_params: list = None,
@@ -292,6 +307,7 @@ def send_template_message(
     # Build the message data
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "type": "template",
         "template": {
             "namespace": template_namespace,
@@ -329,27 +345,36 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 """
 
 
-def determine_claim(msisdn: str, line_name: str) -> requests.Response:
+def determine_claim(msisdn: str, bsuid: str, line_name: str) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim", headers=auth_headers
+        f"https://whatsapp.turn.io/v1/contacts/{whatsapp_user_identifier}/claim",
+        headers=auth_headers,
     )
     logger.debug(f"Determined claim response: {response.text}")
     return response
 
 
-def release_claim(msisdn: str, line_name: str, claim_uuid: str) -> requests.Response:
+def release_claim(
+    msisdn: str, bsuid: str, line_name: str, claim_uuid: str
+) -> requests.Response:
     claim_data = {"claim_uuid": claim_uuid}
 
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.delete(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim",
+        f"https://whatsapp.turn.io/v1/contacts/{whatsapp_user_identifier}/claim",
         headers=auth_headers,
         json=claim_data,
     )
@@ -365,13 +390,16 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 """
 
 
-def start_journey(msisdn: str, line_name: str, stack_uuid: str) -> requests.Response:
-    journey_data = {"wa_id": msisdn}
-
+def start_journey(
+    msisdn: str, bsuid: str, line_name: str, stack_uuid: str
+) -> requests.Response:
     auth_headers = {
         "Authorization": f"Bearer {turn_credentials(line_name)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    journey_data = {"wa_id": msisdn} if msisdn else {"user_id": bsuid}
+
     response = requests.post(
         f"https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start",
         headers=auth_headers,
