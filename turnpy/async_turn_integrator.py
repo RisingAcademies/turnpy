@@ -468,7 +468,9 @@ async def start_journey(
     if not client:
         client = await turn_client.get_client()
 
-    journey_data = {"wa_id": msisdn} if msisdn else {"user_id": bsuid}
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
+    journey_data = {"wa_id": whatsapp_user_identifier}
 
     response = await client.post(
         f"stacks/{stack_uuid}/start",
