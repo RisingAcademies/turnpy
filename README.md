@@ -21,6 +21,25 @@ This package currently supports sending text and media messages as well as obtai
 
 Details are in the comments in the code itself.
 
+## Use without a config file
+
+`turn_config.json` suits a long-running process that owns its filesystem. Somewhere
+that cannot provide one - a Lambda with a read-only bundle, holding its credential in
+a secrets manager - pass the token straight in instead, and `line_name` is ignored:
+
+```python
+from turnpy.turn_integrator import send_text_message, send_template_message
+
+send_text_message(msisdn, None, "hello", token=my_token)
+
+send_template_message(
+    msisdn, None, "analysis_ready",
+    body_params=["Ada", "Fractions"],
+    token=my_token,
+    namespace=my_template_namespace,
+)
+```
+
 ## Testing
 
 You can run the test suite for this repo at any time if you have pytest installed. Note that the API interactions will be recorded with pytest-vcr, but not added to the repo. To re-run them you will need to have a valid item in the `lines` atribute in `turn_config.json` with a `token` and an `expiry`. Note also that test messages will not be sent unless the `test_number` specified in `turn_config.json` has an active conversation window. A new window can be opened by messaging something to the `test_line` from a device using `test_number`. It is recommended that one messages `test_number` first before running the test suite if new cassettes are to be recorded.
