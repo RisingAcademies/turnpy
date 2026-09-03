@@ -15,7 +15,6 @@ Load and evaluate the credentials from the turn_config.json file.
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://whatsapp.turn.io/v1"
-DEFAULT_TIMEOUT = 15
 
 
 def load_credentials(file_name: str, line_name: str) -> str:
