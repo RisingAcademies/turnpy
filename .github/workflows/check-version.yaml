@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check version is higher than the newest tag
-        uses: digicatapult/check-version@v1.5.106
+        uses: digicatapult/check-version@v1.5
         with:
           package_manager: 'poetry'
           token: ${{ secrets.GITHUB_TOKEN }}
