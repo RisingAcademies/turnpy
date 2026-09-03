@@ -1,0 +1,24 @@
+name: Check version bump
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  check-version-bump:
+    name: Check version was bumped
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Check version is higher than the newest tag
+        uses: digicatapult/check-version@v1.5
+        with:
+          package_manager: 'poetry'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_same_version: 'true'
+          # lower versions always fail this check, here also equal

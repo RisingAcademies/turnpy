@@ -4,8 +4,30 @@ on:
     branches:
       - main
 jobs:
+  check-version-bump:
+    name: Check version was bumped
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      # The action emits this 'v'-prefixed, e.g. v1.4.1
+      version: ${{ steps.check.outputs.version }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Check version is higher than the newest tag
+        id: check
+        uses: digicatapult/check-version@v1.5
+        with:
+          package_manager: 'poetry'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_same_version: 'true'
+
   build-and-publish:
     name: Build and publish
+    needs: check-version-bump
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -51,3 +73,32 @@ jobs:
           gcloud config set artifacts/repository ${{env.ARTIFACT_REPOSITORY}}
           gcloud config set artifacts/location ${{env.ARTIFACT_REPOSITORY_LOCATION}}
           python3 -m twine upload --repository-url https://${{env.ARTIFACT_REPOSITORY_LOCATION}}-python.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPOSITORY }}/ dist/*
+
+  tag-version:
+    name: Tag merge with pyproject version
+    needs: [check-version-bump, build-and-publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Tag the merge commit
+        env:
+          VERSION: ${{ needs.check-version-bump.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          # The action reports the version 'v'-prefixed; we tag bare, e.g. 1.4.1
+          VERSION="${VERSION#v}"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" > /dev/null; then
+            echo "Tag $VERSION already exists. Skipping."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
