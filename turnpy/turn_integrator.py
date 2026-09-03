@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 BASE_URL = "https://whatsapp.turn.io/v1"
 
-
 def load_credentials(file_name: str, line_name: str) -> str:
     with open(file_name, "r") as file:
         turn_config = json.load(file)
