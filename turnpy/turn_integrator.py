@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import logging
 from datetime import datetime
@@ -12,6 +14,7 @@ Load and evaluate the credentials from the turn_config.json file.
 
 logger = logging.getLogger(__name__)
 
+BASE_URL = "https://whatsapp.turn.io/v1"
 
 def load_credentials(file_name: str, line_name: str) -> str:
     with open(file_name, "r") as file:
@@ -36,7 +39,11 @@ def eval_credentials(config_json: json) -> str:
         raise ValueError("API key has expired for this Turn line.")
 
 
-def turn_credentials(line_name):
+def turn_credentials(line_name: str | None, *, token: str | None = None) -> str:
+    """Resolve the bearer token for a line, preferring one handed straight in."""
+    if token:
+        return token
+
     config_json = load_credentials("turn_config.json", line_name)
 
     return eval_credentials(config_json)
@@ -51,14 +58,20 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 """
 
 
-def obtain_contact_profile(msisdn: str, line_name: str) -> requests.Response:
+def obtain_contact_profile(
+    msisdn: str,
+    line_name: str | None,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
 
     response = requests.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile", headers=auth_headers
+        f"{BASE_URL}/contacts/{msisdn}/profile",
+        headers=auth_headers,
     )
     logging.debug(f"Obtained contact profile response: {response.text}")
     return response
@@ -72,15 +85,19 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 
 def update_contact_profile(
-    msisdn: str, line_name: str, profile_data: json
+    msisdn: str,
+    line_name: str | None,
+    profile_data: json,
+    *,
+    token: str | None = None,
 ) -> requests.Response:
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
 
     response = requests.patch(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/profile",
+        f"{BASE_URL}/contacts/{msisdn}/profile",
         headers=auth_headers,
         json=profile_data,
     )
@@ -96,11 +113,20 @@ See documentation here: https://whatsapp.turn.io/docs/api/messages
 """
 
 
-def send_message(line_name: str, message_data: json) -> requests.Response:
-    auth_headers = {"Authorization": f"Bearer {turn_credentials(line_name)}"}
+def send_message(
+    line_name: str | None,
+    message_data: json,
+    *,
+    token: str | None = None,
+) -> requests.Response:
+    auth_headers = {
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}"
+    }
 
     return requests.post(
-        "https://whatsapp.turn.io/v1/messages", headers=auth_headers, json=message_data
+        f"{BASE_URL}/messages",
+        headers=auth_headers,
+        json=message_data,
     )
 
 
@@ -112,7 +138,13 @@ another type of recipient.
 """
 
 
-def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Response:
+def send_text_message(
+    msisdn: str,
+    line_name: str | None,
+    message: str,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
@@ -121,18 +153,20 @@ def send_text_message(msisdn: str, line_name: str, message: str) -> requests.Res
         "text": {"body": message},
     }
 
-    response = send_message(line_name, message_data)
-    logger.debug("Sent text message response", response.text)
+    response = send_message(line_name, message_data, token=token)
+    logger.debug(f"Sent text message response: {response.text}")
     return response
 
 
 def send_media_message(
     msisdn: str,
-    line_name: str,
+    line_name: str | None,
     media_type: str,
     media_id: str,
     caption="",
     message: str = "",
+    *,
+    token: str | None = None,
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
@@ -161,7 +195,7 @@ def send_media_message(
     if message:
         message_data["text"] = {"body": message}
 
-    response = send_message(line_name, message_data)
+    response = send_message(line_name, message_data, token=token)
     logger.debug(f"Sent media message response: {response.text}")
     return response
 
@@ -183,7 +217,12 @@ https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
 
 def send_interactive_message(
-    msisdn: str, line_name: str, interactive_type: str, sections: json
+    msisdn: str,
+    line_name: str | None,
+    interactive_type: str,
+    sections: json,
+    *,
+    token: str | None = None,
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
@@ -232,7 +271,7 @@ def send_interactive_message(
                 {"id": list_item["callback_id"], "title": list_item["text"]}
             )
 
-    response = send_message(line_name, message_data)
+    response = send_message(line_name, message_data, token=token)
     logger.debug(f"Sent interactive message response: {response.text}")
     return response
 
@@ -246,13 +285,21 @@ https://whatsapp.turn.io/docs/api/media#supported-file-types
 """
 
 
-def save_media(line_name: str, type: str, file_binary: str) -> requests.Response:
+def save_media(
+    line_name: str | None,
+    type: str,
+    file_binary: str,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Content-Type": type,
     }
     response = requests.post(
-        "https://whatsapp.turn.io/v1/media", headers=auth_headers, data=file_binary
+        f"{BASE_URL}/media",
+        headers=auth_headers,
+        data=file_binary,
     )
     logger.debug(f"Saved media response: {response.text}")
     return response
@@ -278,28 +325,35 @@ https://whatsapp.turn.io/docs/api/messages#template-messages
 
 def send_template_message(
     msisdn: str,
-    line_name: str,
+    line_name: str | None,
     template_name: str,
     header_params: list = None,
     body_params: list = None,
     language: str = "en",
+    *,
+    token: str | None = None,
+    namespace: str | None = None,
 ) -> requests.Response:
 
-    # Get credentials and config
-    config_json = load_credentials("turn_config.json", line_name)
-    template_namespace = config_json["template_namespace"]
+    # The namespace sits beside the token in turn_config.json. An injected token
+    # means the caller has no such file, so don't reach for one: they either pass
+    # `namespace` too, or their line has none and the key is left out entirely.
+    template_namespace = namespace
+    if template_namespace is None and token is None:
+        template_namespace = load_credentials("turn_config.json", line_name)[
+            "template_namespace"
+        ]
 
     # Build the message data
-    message_data = {
-        "to": msisdn,
-        "type": "template",
-        "template": {
-            "namespace": template_namespace,
-            "name": template_name,
-            "language": {"code": language, "policy": "deterministic"},
-            "components": [],
-        },
+    template: dict = {
+        "name": template_name,
+        "language": {"code": language, "policy": "deterministic"},
+        "components": [],
     }
+    if template_namespace:
+        template["namespace"] = template_namespace
+
+    message_data = {"to": msisdn, "type": "template", "template": template}
 
     if header_params:
         header_component = {
@@ -315,7 +369,7 @@ def send_template_message(
         }
         message_data["template"]["components"].append(body_component)
 
-    response = send_message(line_name, message_data)
+    response = send_message(line_name, message_data, token=token)
     logger.debug(f"Send a template message: {response.text}")
     return response
 
@@ -329,27 +383,39 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 """
 
 
-def determine_claim(msisdn: str, line_name: str) -> requests.Response:
+def determine_claim(
+    msisdn: str,
+    line_name: str | None,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
     response = requests.get(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim", headers=auth_headers
+        f"{BASE_URL}/contacts/{msisdn}/claim",
+        headers=auth_headers,
     )
     logger.debug(f"Determined claim response: {response.text}")
     return response
 
 
-def release_claim(msisdn: str, line_name: str, claim_uuid: str) -> requests.Response:
+def release_claim(
+    msisdn: str,
+    line_name: str | None,
+    claim_uuid: str,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     claim_data = {"claim_uuid": claim_uuid}
 
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
     response = requests.delete(
-        f"https://whatsapp.turn.io/v1/contacts/{msisdn}/claim",
+        f"{BASE_URL}/contacts/{msisdn}/claim",
         headers=auth_headers,
         json=claim_data,
     )
@@ -365,15 +431,21 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 """
 
 
-def start_journey(msisdn: str, line_name: str, stack_uuid: str) -> requests.Response:
+def start_journey(
+    msisdn: str,
+    line_name: str | None,
+    stack_uuid: str,
+    *,
+    token: str | None = None,
+) -> requests.Response:
     journey_data = {"wa_id": msisdn}
 
     auth_headers = {
-        "Authorization": f"Bearer {turn_credentials(line_name)}",
+        "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
     response = requests.post(
-        f"https://whatsapp.turn.io/v1/stacks/{stack_uuid}/start",
+        f"{BASE_URL}/stacks/{stack_uuid}/start",
         headers=auth_headers,
         json=journey_data,
     )
