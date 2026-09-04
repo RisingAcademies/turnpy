@@ -74,6 +74,13 @@ jobs:
           gcloud config set artifacts/location ${{env.ARTIFACT_REPOSITORY_LOCATION}}
           python3 -m twine upload --repository-url https://${{env.ARTIFACT_REPOSITORY_LOCATION}}-python.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPOSITORY }}/ dist/*
 
+      - name: Keep the distributions for the release job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
   tag-version:
     name: Tag merge with pyproject version
     needs: [check-version-bump, build-and-publish]
@@ -102,3 +109,39 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$VERSION" -m "Release $VERSION"
           git push origin "$VERSION"
+
+  release:
+    name: Attach the distributions to a GitHub release
+    needs: [check-version-bump, build-and-publish, tag-version]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Fetch the distributions built earlier
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version-bump.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          # The action reports the version 'v'-prefixed; tags are bare, e.g. 1.4.1
+          VERSION="${VERSION#v}"
+
+          if gh release view "$VERSION" > /dev/null 2>&1; then
+            echo "Release $VERSION exists; replacing its assets."
+            gh release upload "$VERSION" dist/* --clobber
+          else
+            gh release create "$VERSION" dist/* \
+              --title "$VERSION" \
+              --generate-notes
+          fi
