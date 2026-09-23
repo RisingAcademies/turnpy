@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 BASE_URL = "https://whatsapp.turn.io/v1"
 
+
 def load_credentials(file_name: str, line_name: str) -> str:
     with open(file_name, "r") as file:
         turn_config = json.load(file)
@@ -60,6 +61,7 @@ https://whatsapp.turn.io/docs/api/contacts#retrieve-a-contact-profile
 
 def obtain_contact_profile(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     *,
     token: str | None = None,
@@ -69,8 +71,10 @@ def obtain_contact_profile(
         "Accept": "application/vnd.v1+json",
     }
 
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.get(
-        f"{BASE_URL}/contacts/{msisdn}/profile",
+        f"{BASE_URL}/contacts/{whatsapp_user_identifier}/profile",
         headers=auth_headers,
     )
     logging.debug(f"Obtained contact profile response: {response.text}")
@@ -86,6 +90,7 @@ https://whatsapp.turn.io/docs/api/contacts#update-a-contact-profile
 
 def update_contact_profile(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     profile_data: json,
     *,
@@ -96,8 +101,10 @@ def update_contact_profile(
         "Accept": "application/vnd.v1+json",
     }
 
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.patch(
-        f"{BASE_URL}/contacts/{msisdn}/profile",
+        f"{BASE_URL}/contacts/{whatsapp_user_identifier}/profile",
         headers=auth_headers,
         json=profile_data,
     )
@@ -140,6 +147,7 @@ another type of recipient.
 
 def send_text_message(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     message: str,
     *,
@@ -148,7 +156,8 @@ def send_text_message(
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
-        "to": f"{msisdn}",
+        "to": msisdn,
+        "recipient": bsuid,
         "type": "text",
         "text": {"body": message},
     }
@@ -160,6 +169,7 @@ def send_text_message(
 
 def send_media_message(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     media_type: str,
     media_id: str,
@@ -170,6 +180,7 @@ def send_media_message(
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "recipient_type": "individual",
     }
     if media_type == "audio":
@@ -218,6 +229,7 @@ https://whatsapp.turn.io/docs/api/messages#interactive-messages
 
 def send_interactive_message(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     interactive_type: str,
     sections: json,
@@ -226,6 +238,7 @@ def send_interactive_message(
 ) -> requests.Response:
     message_data = {
         "to": msisdn,
+        "recipient": bsuid,
         "type": "interactive",
         "interactive": {
             "type": interactive_type,
@@ -311,7 +324,8 @@ def save_media(
 Send a templated message to a WhatsApp user.
 
 The arguments are:
-'msisdn' - string, required WhatsApp ID to send to
+'msisdn' - string, an optional WhatsApp ID based on the phone number to send to
+'bsuid' - string, an optional alternative identifier for users who opted out of sharing their phone number
 'line_name' - string, required Turn line to use
 'template_name' - string, required name of the template to use
 'header_params' - list, optional list of strings for header placeholders
@@ -325,6 +339,7 @@ https://whatsapp.turn.io/docs/api/messages#template-messages
 
 def send_template_message(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     template_name: str,
     header_params: list = None,
@@ -353,7 +368,12 @@ def send_template_message(
     if template_namespace:
         template["namespace"] = template_namespace
 
-    message_data = {"to": msisdn, "type": "template", "template": template}
+    message_data = {
+        "to": msisdn,
+        "recipient": bsuid,
+        "type": "template",
+        "template": template,
+    }
 
     if header_params:
         header_component = {
@@ -385,6 +405,7 @@ See: https://whatsapp.turn.io/docs/api/extensions#managing-conversation-claims
 
 def determine_claim(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     *,
     token: str | None = None,
@@ -393,8 +414,11 @@ def determine_claim(
         "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.get(
-        f"{BASE_URL}/contacts/{msisdn}/claim",
+        f"{BASE_URL}/contacts/{whatsapp_user_identifier}/claim",
         headers=auth_headers,
     )
     logger.debug(f"Determined claim response: {response.text}")
@@ -403,6 +427,7 @@ def determine_claim(
 
 def release_claim(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     claim_uuid: str,
     *,
@@ -414,8 +439,11 @@ def release_claim(
         "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
     response = requests.delete(
-        f"{BASE_URL}/contacts/{msisdn}/claim",
+        f"{BASE_URL}/contacts/{whatsapp_user_identifier}/claim",
         headers=auth_headers,
         json=claim_data,
     )
@@ -433,6 +461,7 @@ Details here: https://whatsapp.turn.io/docs/api/stacks
 
 def start_journey(
     msisdn: str,
+    bsuid: str,
     line_name: str | None,
     stack_uuid: str,
     *,
@@ -444,6 +473,11 @@ def start_journey(
         "Authorization": f"Bearer {turn_credentials(line_name, token=token)}",
         "Accept": "application/vnd.v1+json",
     }
+
+    whatsapp_user_identifier = msisdn if msisdn else bsuid
+
+    journey_data = {"wa_id": whatsapp_user_identifier}
+
     response = requests.post(
         f"{BASE_URL}/stacks/{stack_uuid}/start",
         headers=auth_headers,
