@@ -1,4 +1,5 @@
 import json
+from contextlib import contextmanager
 
 import pytest
 
@@ -20,6 +21,23 @@ def load_test_config():
 
 test_config = load_test_config()
 
+# explicit credentials for non-config-file environments
+test_line_credentials = turn_integrator.load_credentials(
+    "turn_config.json", test_config["test_line"]
+)
+
+
+# Anything turnpy opens inside this block is a turn_config.json fallback, which
+# for those callers means a FileNotFoundError on their first send in production.
+@contextmanager
+def no_config_file():
+    def refuse(name, *_args, **_kwargs):
+        raise AssertionError(f"turnpy opened {name} despite being given a token")
+
+    with pytest.MonkeyPatch.context() as patched:
+        patched.setattr(turn_integrator, "open", refuse, raising=False)
+        yield
+
 
 def test_eval_credentials():
     config_json = {"token": "ABCD", "expiry": "Apr 2, 2010 1:16 PM"}
@@ -30,6 +48,11 @@ def test_eval_credentials():
 
     config_json = {"token": "ABCD", "expiry": "Apr 2, 2030 1:16 PM"}
     assert turn_integrator.eval_credentials(config_json) == "ABCD"
+
+
+def test_turn_credentials_prefers_an_injected_token():
+    with no_config_file():
+        assert turn_integrator.turn_credentials("no_such_line", token="ABCD") == "ABCD"
 
 
 # If a specific number has been claimed by a journey sending a message will have no effect. So ensure the test
@@ -333,6 +356,62 @@ def test_send_template_message(msisdn, bsuid):
         body_params=["Test Body Param 1"],
         language="en",
     )
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text["messages"][0]["id"]
+
+
+@pytest.mark.vcr()
+@pytest.mark.parametrize(
+    "msisdn,bsuid",
+    [
+        (test_config["test_number"], ""),
+        ("", test_config["test_bsuid"]),
+        (test_config["test_number"], test_config["test_bsuid"]),
+    ],
+)
+def test_send_text_message_with_an_injected_token(msisdn, bsuid):
+    release_any_claim(test_config)
+
+    with no_config_file():
+        response = turn_integrator.send_text_message(
+            msisdn=msisdn,
+            bsuid=bsuid,
+            line_name=test_config["test_line"],
+            message="Test!",
+            token=test_line_credentials["token"],
+        )
+    response_text = json.loads(response.text)
+
+    assert response.status_code == 200
+    assert response_text["messages"][0]["id"]
+
+
+@pytest.mark.vcr()
+@pytest.mark.parametrize(
+    "msisdn,bsuid",
+    [
+        (test_config["test_number"], ""),
+        ("", test_config["test_bsuid"]),
+        (test_config["test_number"], test_config["test_bsuid"]),
+    ],
+)
+def test_send_template_message_with_an_injected_token(msisdn, bsuid):
+    release_any_claim(test_config)
+
+    with no_config_file():
+        response = turn_integrator.send_template_message(
+            msisdn=msisdn,
+            bsuid=bsuid,
+            line_name=test_config["test_line"],
+            template_name=test_config["test_template"],
+            header_params=["Test Header"],
+            body_params=["Test Body Param 1"],
+            language="en",
+            token=test_line_credentials["token"],
+            namespace=test_line_credentials["template_namespace"],
+        )
     response_text = json.loads(response.text)
 
     assert response.status_code == 200
