@@ -156,11 +156,15 @@ def send_text_message(
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "text",
         "text": {"body": message},
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     response = send_message(line_name, message_data, token=token)
     logger.debug(f"Sent text message response: {response.text}")
@@ -179,10 +183,15 @@ def send_media_message(
     token: str | None = None,
 ) -> requests.Response:
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "recipient_type": "individual",
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
+
     if media_type == "audio":
         message_data["type"] = "audio"
         message_data["audio"] = {"id": media_id}
@@ -237,8 +246,6 @@ def send_interactive_message(
     token: str | None = None,
 ) -> requests.Response:
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "interactive",
         "interactive": {
             "type": interactive_type,
@@ -246,6 +253,12 @@ def send_interactive_message(
             "action": {},
         },
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     if sections["header_text"]:
         message_data["interactive"]["header"] = {
@@ -369,11 +382,15 @@ def send_template_message(
         template["namespace"] = template_namespace
 
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "template",
         "template": template,
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     if header_params:
         header_component = {
