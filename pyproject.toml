@@ -10,9 +10,6 @@ authors = [
 license = "MIT"
 readme = "README.md"
 
-[tool.poetry]
-version = "3.0.0"
-
 requires-python = ">=3.12"
 
 classifiers = [
@@ -35,6 +32,9 @@ dev = [
     "twine",
     "wheel", 
 ]
+
+[tool.poetry]
+version = "3.0.0"
 
 [build-system]
 requires = ["poetry-core"]
