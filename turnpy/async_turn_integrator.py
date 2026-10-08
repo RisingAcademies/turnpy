@@ -170,11 +170,15 @@ async def send_text_message(
     message_data = {
         "preview_url": False,
         "recipient_type": "individual",
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "text",
         "text": {"body": message},
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     response = await send_message(line_name, message_data)
     logger.debug(f"Sent text message response: {response.text}")
@@ -191,10 +195,15 @@ async def send_media_message(
     message: str = "",
 ) -> httpx.Response:
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "recipient_type": "individual",
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
+
     if media_type == "audio":
         message_data["type"] = "audio"
         message_data["audio"] = {"id": media_id}
@@ -243,8 +252,6 @@ async def send_interactive_message(
     msisdn: str, bsuid: str, line_name: str, interactive_type: str, sections: json
 ) -> httpx.Response:
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "interactive",
         "interactive": {
             "type": interactive_type,
@@ -252,6 +259,12 @@ async def send_interactive_message(
             "action": {},
         },
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     if sections["header_text"]:
         message_data["interactive"]["header"] = {
@@ -354,8 +367,6 @@ async def send_template_message(
 
     # Build the message data
     message_data = {
-        "to": msisdn,
-        "recipient": bsuid,
         "type": "template",
         "template": {
             "namespace": template_namespace,
@@ -364,6 +375,12 @@ async def send_template_message(
             "components": [],
         },
     }
+
+    if msisdn:
+        message_data.update({"to": msisdn})
+
+    if bsuid:
+        message_data.update({"recipient": bsuid})
 
     if header_params:
         header_component = {

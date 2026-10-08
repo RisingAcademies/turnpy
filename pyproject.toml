@@ -1,6 +1,6 @@
 [project]
 name = "turnpy"
-version = "3.0.0"
+version = "3.1.0"
 description = "A package to help you connect to the Turn.io API from a Python app"
 authors = [
     {name = "Rising Academies"},
@@ -34,7 +34,7 @@ dev = [
 ]
 
 [tool.poetry]
-version = "3.0.0"
+version = "3.1.0"
 
 [build-system]
 requires = ["poetry-core"]
